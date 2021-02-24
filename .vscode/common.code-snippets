@@ -1,0 +1,18 @@
+{
+	"Print to console": {
+		"scope": "typescriptreact",
+		"prefix": "fc",
+		"body": [
+      "import React from 'react'",
+      "import classes from './index.scss'",
+      "",
+      "function $1() {",
+      "  return (",
+      "    <div>$1</div>",
+      "  )",
+      "}",
+      "",
+      "export default $1"
+		],
+	}
+}
