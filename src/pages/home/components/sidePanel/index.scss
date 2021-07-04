@@ -1,0 +1,16 @@
+.sideMenuContainer {
+  width: 300px;
+  height: 100vh;
+  box-shadow: 0 0 5px #ccc;
+
+  :global {
+    .logo {
+      background-color: #69C1FD;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      text-indent: 10px;
+      line-height: 50px;
+    }
+  }
+}

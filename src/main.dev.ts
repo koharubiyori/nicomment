@@ -14,10 +14,11 @@ import path from 'path';
 import { app, BrowserWindow, Menu, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import initIpcHub from './ipcHub/index'
 
 export default class AppUpdater {
   constructor() {
-    log.transports.file.level = 'info';
+    log.transports.file.level = 'warn';
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
   }
@@ -74,8 +75,11 @@ const createWindow = async () => {
     icon: getAssetPath('icon.png'),
     webPreferences: {
       nodeIntegration: true,
+      // webSecurity: false,
     },
   });
+
+  initIpcHub(mainWindow)
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 

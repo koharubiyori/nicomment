@@ -1,0 +1,37 @@
+.myAppBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background-color: #3f51b5;
+  color: white;
+  font-size: 18px;
+  box-shadow: 0 2px 5px #ccc, 0 3px 10px #ccc;
+
+  :global {
+    .contentContainer {
+      height: calc(100% - 5px);
+      margin: 5px;
+      margin-bottom: 0;
+
+      > * {
+        position: relative;
+        top: -2.5px;
+      }
+
+      .title {
+        margin-left: 15px;
+      }
+
+      .rightButtons {
+        margin-right: 10px;
+      }
+    }
+
+    .iconButton {
+      width: 38px;
+      height: 38px;
+    }
+  }
+}
