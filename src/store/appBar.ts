@@ -3,7 +3,7 @@ import { debounce } from '@material-ui/core'
 import { action, observable, runInAction } from 'mobx'
 
 class AppBarStore {
-  @observable title = 'Nicoment'
+  @observable title = 'Nicomment'
   @observable isWindowMaximized = false
 
   constructor() {

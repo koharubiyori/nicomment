@@ -1,7 +1,10 @@
 .sideMenuContainer {
-  width: 300px;
+  width: 250px;
   height: 100vh;
   box-shadow: 0 0 5px #ccc;
+  box-sizing: border-box;
+  padding: 10px;
+  overflow: auto;
 
   :global {
     .logo {
@@ -11,6 +14,10 @@
       font-size: 18px;
       text-indent: 10px;
       line-height: 50px;
+    }
+
+    .MuiBox-root {
+      margin-top: 10px;
     }
   }
 }

@@ -1,3 +1,10 @@
 .mainLayout {
-  padding-top: 44px;
+  margin-top: var(--myAppBarHeight);
+  height: calc(100vh - var(--myAppBarHeight));
+
+  :global {
+    .mainLayout-content {
+      height: 100%;
+    }
+  }
 }

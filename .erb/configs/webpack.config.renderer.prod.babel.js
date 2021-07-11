@@ -52,7 +52,13 @@ export default merge(baseConfig, {
             },
           },
           'css-loader',
-          'sass-loader'
+          'sass-loader',
+          {
+            loader: 'sass-resources-loader',
+            options: {
+              resources: path.resolve(__dirname, '../../src/styles/globals.scss')
+            }
+          }
         ],
       },
       // WOFF Font

@@ -10,8 +10,9 @@ import { windowIpcClient } from '~/ipcHub/modules/window'
 import store from '~/store'
 import classes from './index.scss'
 
-function MyAppBar() {
+export const MyAppBarHeight = 44
 
+function MyAppBar() {
   async function toggleMaximize() {
     store.appBar.setIsWindowMaximized(await windowIpcClient.toggleMaximize())
   }

@@ -116,6 +116,12 @@ export default merge(baseConfig, {
           {
             loader: 'sass-loader',
           },
+          {
+            loader: 'sass-resources-loader',
+            options: {
+              resources: path.resolve(__dirname, '../../src/styles/globals.scss')
+            }
+          }
         ],
       },
       // SASS support - compile all other .scss files and pipe it to style.css
@@ -141,6 +147,12 @@ export default merge(baseConfig, {
           {
             loader: 'sass-loader',
           },
+          {
+            loader: 'sass-resources-loader',
+            options: {
+              resources: path.resolve(__dirname, '../../src/styles/globals.scss')
+            }
+          }
         ],
       },
       // WOFF Font
