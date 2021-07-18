@@ -52,11 +52,10 @@ export default merge(baseConfig, {
             },
           },
           'css-loader',
-          'sass-loader',
           {
-            loader: 'sass-resources-loader',
+            loader: 'sass-loader',
             options: {
-              resources: path.resolve(__dirname, '../../src/styles/globals.scss')
+              additionalData: '@import "~/styles/globals.scss";'
             }
           }
         ],

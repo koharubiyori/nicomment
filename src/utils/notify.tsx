@@ -28,7 +28,7 @@ export function NotifyProvider(props: NotifyProviderProps) {
     ) => ({
       variant: type,
       anchorOrigin: { vertical: position[0], horizontal: position[1] },
-      autoHideDuration: 2000
+      autoHideDuration: 3000
     })
 
     let notifyClient: any = (message: any, position?: any) => msg(message, createOptions('default', position))

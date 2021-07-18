@@ -1,0 +1,44 @@
+.container {
+  height: 90px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+
+  :global {
+    .MuiTouchRipple-child {
+      background-color: rgba($color: map-get($colors, main), $alpha: 0.5)
+    }
+
+    .thumbnailImg {
+      width: 160px;
+      height: 90px;
+      object-fit: cover;
+    }
+
+    .info {
+      margin-left: 10px;
+
+      .title {
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .infoRow {
+        margin: 5px 0;
+        color: #666;
+
+        &:nth-last-of-type(2) {
+          margin-top: 20px;
+        }
+
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+
+        .infoItem {
+          width: 12em;
+          margin-right: 20px;
+        }
+      }
+    }
+  }
+}

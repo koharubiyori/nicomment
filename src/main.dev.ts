@@ -69,8 +69,10 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    width: 1100,
+    height: 700,
+    minWidth: 1100,
+    minHeight: 700,
     frame: false,
     icon: getAssetPath('icon.png'),
     webPreferences: {
@@ -80,8 +82,9 @@ const createWindow = async () => {
   });
 
   initIpcHub(mainWindow)
+  process.env.DEBUG_PROD === 'true' && mainWindow.webContents.openDevTools()
 
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event

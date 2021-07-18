@@ -3,9 +3,3 @@ $colors: (
   dark: #2e3b85,
   light: #4f64e0
 );
-
-:export {
-  main: map-get($colors, main);
-  dark: map-get($colors, dark);
-  light: map-get($colors, light);
-}

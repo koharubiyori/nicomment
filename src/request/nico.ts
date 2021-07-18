@@ -1,4 +1,5 @@
-import got from 'got/dist/source'
+import { notify } from './../utils/notify';
+import got, { RequestError } from 'got'
 import { CookieJar } from 'tough-cookie'
 import logger from './logger'
 
@@ -25,8 +26,12 @@ export const nicoRequest = got.extend({
 
   hooks: {
     beforeRequest: [logger.request],
-    afterResponse: [logger.response]
+    afterResponse: [logger.response],
+    beforeError: [errorHook]
   }
 })
 
-
+function errorHook(error: RequestError) {
+  notify.error('网络错误')
+  return error
+}

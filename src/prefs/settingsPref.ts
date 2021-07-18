@@ -1,3 +1,4 @@
+import { SupportedLanguages } from '~/utils/i18n'
 import storage from '~/utils/storage'
 
 const storageKey = 'settings'
@@ -7,7 +8,8 @@ const originalObj = {
   password: '',
   pathOfSave: '',
   intervalOfGet: 500,
-  numberOfRetry: 2
+  numberOfRetry: 2,
+  language: 'zh' as SupportedLanguages,
 }
 
 export type SettingsPref = typeof originalObj

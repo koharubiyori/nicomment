@@ -1,3 +1,25 @@
 .container {
   height: 100%;
+
+  :global {
+    .videList {
+      overflow: auto;
+      box-sizing: border-box;
+      padding: 10px;
+
+      .noData {
+        .hintText {
+          font-size: 20px;
+          color: #ccc;
+        }
+      }
+
+      .allLoaded {
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        color: #aaa;
+      }
+    }
+  }
 }

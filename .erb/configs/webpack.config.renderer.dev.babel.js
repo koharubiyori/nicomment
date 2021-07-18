@@ -115,11 +115,8 @@ export default merge(baseConfig, {
           },
           {
             loader: 'sass-loader',
-          },
-          {
-            loader: 'sass-resources-loader',
             options: {
-              resources: path.resolve(__dirname, '../../src/styles/globals.scss')
+              additionalData: '@import "~/styles/globals.scss";'
             }
           }
         ],
@@ -146,11 +143,8 @@ export default merge(baseConfig, {
           },
           {
             loader: 'sass-loader',
-          },
-          {
-            loader: 'sass-resources-loader',
             options: {
-              resources: path.resolve(__dirname, '../../src/styles/globals.scss')
+              additionalData: '@import "~/styles/globals.scss";'
             }
           }
         ],

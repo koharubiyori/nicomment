@@ -5,3 +5,9 @@
 .com-noDrag {
   -webkit-app-region: no-drag;
 }
+
+.com-textLimit {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

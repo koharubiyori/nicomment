@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@material-ui/core'
 import React from 'react'
 import useSafePopover from '~/hooks/useSafePopover'
-import MainLayout from '~/layout'
+import MainLayout from '~/layout/index'
 import { I18nProvider } from '~/utils/i18n'
 import { NotifyProvider } from '~/utils/notify'
 import Routes from './routes'

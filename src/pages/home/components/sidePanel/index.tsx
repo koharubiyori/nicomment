@@ -1,34 +1,31 @@
-import { Box, Button, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select, TextField, Typography } from '@material-ui/core'
+import { Box, Button, FormControl, FormControlLabel, IconButton, InputAdornment, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import React, { useEffect, useState } from 'react'
 import path from 'path'
 import { appIpcClient } from '~/ipcHub/modules/app'
 import { dialogIpcClient } from '~/ipcHub/modules/dialog'
 import settingsPref from '~/prefs/settingsPref'
-import { useI18n } from '~/utils/i18n'
+import { setCurrentLanguage, useI18n } from '~/utils/i18n'
 import { notify } from '~/utils/notify'
 import classes from './index.scss'
 import { Visibility, VisibilityOff } from '@material-ui/icons'
 
 export interface Props {
-  onSearch(searchFormValues: SearchFormValues, settingsFormValues: SettingsFromValues): void
+  onSearch(searchFormValues: SearchFormValues): void
+  onSettingsChange(settingsFormValues: SettingsFormValues): void
+  onCodeSearch(code: string): void
 }
 
 export interface SearchFormValues {
   keyword: string
-  order: OrderType
+  sequence: SequenceType
   duration: DurationType
   viewCount: ViewCountType
 }
 
-export interface SettingsFromValues {
-  mail: string
-  password: string
-  intervalOfGet: number
-  numberOfRetry: number
-}
+export type SettingsFormValues = typeof settingsPref
 
-export type OrderType =
+export type SequenceType =
     'commentMost'
   | 'commentLeast'
   | 'publishLatest'
@@ -62,10 +59,11 @@ function SidePanel(props: Props) {
   const i18n = useI18n()
   const [searchForm, setSearchForm] = useState<SearchFormValues>({
     keyword: '',
-    order: 'commentMost',
+    sequence: 'commentMost',
     duration: 'none',
     viewCount: 'none'
   })
+  const [smOrSoCode, setSmOrSoCode] = useState('')
   const [settingsForm, setSettingsForm] = useState(() => ({ ...settingsPref }))
   const [showPassword, setShowPassword] = useState(false)
 
@@ -78,18 +76,23 @@ function SidePanel(props: Props) {
       })
   }, [])
 
+  useEffect(() => {
+    setCurrentLanguage(settingsForm.language)
+  }, [settingsForm.language])
+
   function setSearchFormItem<T extends keyof typeof searchForm>(itemName: T, value: (typeof searchForm)[T]) {
     setSearchForm(prevVal => ({ ...prevVal, [itemName]: value }))
   }
 
   function setSettingsFormItem<T extends keyof typeof settingsForm>(itemName: T, value: (typeof settingsForm)[T]) {
-    settingsPref[itemName] = value
     setSettingsForm(prevVal => ({ ...prevVal, [itemName]: value }))
+    settingsPref[itemName] = value
+    props.onSettingsChange(settingsPref)
   }
 
   async function showDirSelectDialog() {
     const result = await dialogIpcClient.showDirSelectDialog({
-      title: '选择保存位置',
+      title: i18n.selectLocationOfSave,
       properties: ['openDirectory']
     })
 
@@ -99,11 +102,29 @@ function SidePanel(props: Props) {
 
   function search() {
     if (searchForm.keyword.trim() === '') {
-      return notify.warning('搜索关键词不能为空')
+      return notify.warning(i18n.emptyKeywordHintForSearch)
     }
+
+    if (settingsForm.mail.trim().length === 0 || settingsForm.password.trim().length === 0) {
+      return notify.warning(i18n.emptyLoginInfoHintForSearch)
+    }
+
+    props.onSearch(searchForm)
   }
 
-  const orderList = Object.entries(i18n.orderTypes)
+  function codeSearch() {
+    if (smOrSoCode.trim() === '') {
+      return notify.warning(i18n.emptyCodeHintForSearch)
+    }
+
+    if (settingsForm.mail.trim().length === 0 || settingsForm.password.trim().length === 0) {
+      return notify.warning(i18n.emptyLoginInfoHintForSearch)
+    }
+
+    props.onCodeSearch(smOrSoCode)
+  }
+
+  const sequenceList = Object.entries(i18n.sequenceTypes)
   const durationList = Object.entries(i18n.durationTypes)
   const viewCountList = Object.entries(i18n.viewCountTypes)
 
@@ -113,16 +134,17 @@ function SidePanel(props: Props) {
         <TextField fullWidth
           label={i18n.keywordSearch}
           onChange={e => setSearchFormItem('keyword', e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && search()}
         />
       </Box>
       <Box>
         <FormControl fullWidth>
-          <InputLabel>{i18n.order}</InputLabel>
+          <InputLabel>{i18n.sequence}</InputLabel>
           <Select fullWidth
-            value={searchForm.order}
-            onChange={e => setSearchFormItem('order', e.target.value as OrderType)}
+            value={searchForm.sequence}
+            onChange={e => setSearchFormItem('sequence', e.target.value as SequenceType)}
           >
-            {orderList.map(([value, label]) =>
+            {sequenceList.map(([value, label]) =>
               <MenuItem value={value} key={value}>{label}</MenuItem>
             )}
           </Select>
@@ -160,13 +182,42 @@ function SidePanel(props: Props) {
           color="primary"
           style={{ marginTop: 20 }}
           onClick={search}
-        >搜索</Button>
+        >{i18n.search}</Button>
       </Box>
 
-      <Typography variant="subtitle1" style={{ marginTop: 20, marginBottom: 10 }}>设置</Typography>
+      <Box className="flex-row flex-cross-end">
+        <TextField
+          label={i18n.smOrSoCode}
+          className="flex"
+          onChange={e => setSmOrSoCode(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && codeSearch()}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ height: 33, marginLeft: 10 }}
+          onClick={codeSearch}
+        >{i18n.download}</Button>
+      </Box>
+
+      <Typography variant="subtitle1" style={{ marginTop: 20, marginBottom: 10 }}>{i18n.settings}</Typography>
+      <RadioGroup row value={settingsForm.language} onChange={(e, val) => setSettingsFormItem('language', val as any)}>
+        <div className="flex-row flex-main-center">
+          <FormControlLabel
+            value="zh"
+            label="简体中文"
+            control={<Radio color="primary" />}
+          />
+          <FormControlLabel
+            value="jp"
+            label="日本語"
+            control={<Radio color="primary" />}
+          />
+        </div>
+      </RadioGroup>
       <Box style={{ marginTop: 0 }}>
         <TextField fullWidth
-          label={'邮箱'}
+          label={i18n.mail}
           value={settingsForm.mail}
           onChange={e => setSettingsFormItem('mail', e.target.value)}
         />
@@ -174,7 +225,7 @@ function SidePanel(props: Props) {
       <Box>
         <TextField fullWidth
           type={showPassword ? 'text' : 'password'}
-          label={'密码'}
+          label={i18n.password}
           value={settingsForm.password}
           onChange={e => setSettingsFormItem('password', e.target.value)}
           InputProps={{
@@ -190,13 +241,13 @@ function SidePanel(props: Props) {
       </Box>
       <Box>
         <TextField fullWidth multiline
-          label={'保存位置'}
+          label={i18n.locationOfSave}
           value={settingsForm.pathOfSave}
           InputProps={{ readOnly: true }}
           onClick={showDirSelectDialog}
         />
       </Box>
-      <Box>
+      {/* <Box>
         <TextField fullWidth
           type="number"
           label={'获取间隔(ms)'}
@@ -211,7 +262,7 @@ function SidePanel(props: Props) {
           value={settingsForm.numberOfRetry}
           onChange={e => setSettingsFormItem('numberOfRetry', parseInt(e.target.value))}
         />
-      </Box>
+      </Box> */}
     </div>
   )
 }

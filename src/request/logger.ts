@@ -14,7 +14,7 @@ function reqLog(type: 'request' | 'response', url: string, query: any, body: any
 const requestLogger: BeforeRequestHook = (options) => {
   const url = options.url.hostname + options.url.pathname
   let queryParams: any = {}
-  options.url.searchParams.forEach((val, name) => queryParams[val] = name)
+  options.url.searchParams.forEach((val, name) => queryParams[name] = val)
 
   if (options.method === 'POST') {
     reqLog('request', url, options.json, queryParams, options)
@@ -28,12 +28,13 @@ const responseLogger: AfterResponseHook = (res) => {
   const url = options.url
   const reqUrl = url.hostname + url.pathname
   let queryParams: any = {}
-  url.searchParams.forEach((val, name) => queryParams[val] = name)
+  url.searchParams.forEach((val, name) => queryParams[name] = val)
 
+  const body = res.headers['content-type']?.split(';')[0] === 'application/json' ? JSON.parse(res.body as any) : res.body
   if (options.method === 'POST') {
-    reqLog('response', reqUrl, options.json, queryParams, res)
+    reqLog('response', reqUrl, options.json, queryParams, body, res)
   } else {
-    reqLog('response', reqUrl, queryParams, undefined, res)
+    reqLog('response', reqUrl, queryParams, undefined, body, res)
   }
 
   return res

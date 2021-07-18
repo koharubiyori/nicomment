@@ -2,13 +2,13 @@ import { nicoRequest } from '~/request/nico'
 
 export interface NicoSearchOptions {
   q?: string
-  target?: string
+  targets?: string
   fields: string
   filters?: string
   jsonFilter?: string
   _sort: string
-  _offset?: string
-  _limit?: string
+  _offset?: number
+  _limit?: number
 }
 
 export interface GetCommentsOptions {
@@ -38,7 +38,7 @@ const nicoApi = {
   },
 
   search(options: NicoSearchOptions) {
-    return nicoRequest.post('https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search', {
+    return nicoRequest.get('https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search', {
       searchParams: {
         ...options,
         _context: 'apiguide'
@@ -109,11 +109,7 @@ const nicoApi = {
         ...requestData,
         divider('rf:0')
       ])
-    })
-      .then(res => {
-        const data: any[] = JSON.parse(res.body)
-        return data
-      })
+    }).json()
   }
 }
 
