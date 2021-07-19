@@ -42,7 +42,7 @@ export default merge(baseConfig, {
   module: {
     rules: [
       {
-        test: /.s?css$/,
+        test: /\.global\.css$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
@@ -51,7 +51,74 @@ export default merge(baseConfig, {
               publicPath: './',
             },
           },
-          'css-loader',
+          {
+            loader: 'css-loader',
+          },
+        ],
+      },
+      {
+        test: /^((?!\.global).)*\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              // `./dist` can't be inerhited for publicPath for styles. Otherwise generated paths will be ./dist/dist
+              publicPath: './',
+            },
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: '[name]__[local]__[hash:base64:5]',
+              },
+              importLoaders: 1,
+            },
+          },
+        ],
+      },
+      // SASS support - compile all .global.scss files and pipe it to style.css
+      {
+        test: /\.global\.(scss|sass)$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              // `./dist` can't be inerhited for publicPath for styles. Otherwise generated paths will be ./dist/dist
+              publicPath: './',
+            },
+          },
+          {
+            loader: 'css-loader',
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              additionalData: '@import "~/styles/globals.scss";'
+            }
+          }
+        ],
+      },
+      // SASS support - compile all other .scss files and pipe it to style.css
+      {
+        test: /^((?!\.global).)*\.(scss|sass)$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              // `./dist` can't be inerhited for publicPath for styles. Otherwise generated paths will be ./dist/dist
+              publicPath: './',
+            },
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: {
+                localIdentName: '[name]__[local]__[hash:base64:5]',
+              },
+              importLoaders: 1,
+            },
+          },
           {
             loader: 'sass-loader',
             options: {
