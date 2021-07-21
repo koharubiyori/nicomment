@@ -10,7 +10,6 @@ const zhLanguageMap = {
   duration: '时长',
 
   keywordSearch: '关键词搜索',
-  viewCount: '播放数',
   locationOfSave: '保存位置',
   smOrSoCode: 'sm/so号',
   doSearchPlease: '请先执行搜索',
@@ -34,6 +33,7 @@ const zhLanguageMap = {
   failHintOfDownloadComments: '弹幕下载失败',
   basicDateFormatForMoment: 'YYYY年MM月DD日 HH:mm:ss',
   allLoadedHintOfSearchResult: '你已经触碰到我的底线了ψ(╰_╯)',
+  emptyHintOfSearchResult: '什么也没搜到...',
 
   sequenceTypes: {
     commentMost: '弹幕最多',

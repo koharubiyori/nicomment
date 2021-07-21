@@ -141,6 +141,10 @@ function HomePage() {
 
         setVideoList(next ? videoListRef.current.concat(data.data) : data.data)
         setVideoListStatus(nextStatus as any)
+
+        if (nextStatus === 5) {
+          notify.success(i18n.emptyHintOfSearchResult)
+        }
       })
       .catch(e => {
         console.log(e)
