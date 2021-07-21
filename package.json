@@ -1,5 +1,6 @@
 {
-  "name": "electron-react-boilerplate",
+  "name": "nicomment",
+  "version": "0.0.1",
   "productName": "Nicomment",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Fast Refresh for rapid application development",
   "scripts": {
@@ -31,8 +32,8 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.erb.ElectronReact",
+    "productName": "Nicomment",
+    "appId": "org.erb.Nicomment",
     "files": [
       "dist/",
       "node_modules/",

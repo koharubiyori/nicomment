@@ -31,7 +31,7 @@ const jpLanguageMap: LanguageMap = {
   loginFailHint: 'ログインは失敗しました。ログイン設定とネット環境をチェックしてください',
   startHintOfDownloadComments: 'コメントのダウンロードを開始する：',
   successHintOfDownloadComments: (title: string, total: number) => `コメントを保存しました：${title}，実際的に${total}個を保存しました`,
-  failHintOfSaveComments: 'フィールの保存が失败しました',
+  failHintOfSaveComments: 'ファイルの保存が失败しました',
   failHintOfDownloadComments: 'コメントのダウンロードが失敗しました',
   basicDateFormatForMoment: 'YYYY年MM月DD日 HH:mm:ss',
   allLoadedHintOfSearchResult: '全部ロードしました',
