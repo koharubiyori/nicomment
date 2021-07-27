@@ -25,7 +25,7 @@ const jpLanguageMap: LanguageMap = {
   selectLocationOfSave: 'セーブ位置を選択してください',
   emptyKeywordHintForSearch: '検索キーワードは空欄できません',
   emptyLoginInfoHintForSearch: 'ログイン設定は空欄できません',
-  emptyCodeHintForSearch: 'sm/so ID号は空欄できません',
+  emptyCodeHintForSearch: 'sm/so IDは空欄できません',
   tryLoginHint: 'ログインをトライ中...',
   loginSuccessHint: 'ログインしました',
   loginFailHint: 'ログインは失敗しました。ログイン設定とネット環境をチェックしてください',

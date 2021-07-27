@@ -13,7 +13,7 @@ import { CircularProgress } from '@material-ui/core'
 import useStateWithRef from '~/hooks/useStateWithRef'
 import { throttle } from 'throttle-debounce'
 import nicoCommentResponseToXml from '~/utils/nicoCommentResponseToXml'
-import fs from 'fs'
+import fs, { constants } from 'fs'
 import path from 'path'
 import { useI18n } from '~/utils/i18n'
 
@@ -164,7 +164,15 @@ function HomePage() {
       const videoInfo = await nicoApi.getVideoInfo(id)
       const comments = (await nicoApi.getComments(videoInfo)) as any[]
       const fileContent = nicoCommentResponseToXml(comments)
-      const filePath = path.join(searchConfigRef.current.settings!.pathOfSave, videoInfo.video.title + '.xml')
+      const fileDir = searchConfigRef.current.settings!.pathOfSave
+      const filePath = path.join(fileDir, videoInfo.video.title + '.xml')
+
+      const isDirExists = await new Promise<boolean>(resolve => fs.access(fileDir, constants.F_OK, err => resolve(!err)))
+
+      // 如果保存目录不存在，创建目录
+      if (!isDirExists) {
+        await new Promise<void>((resolve, reject) => fs.mkdir(fileDir, { recursive: true }, e => e ? reject() : resolve()))
+      }
 
       try {
         await new Promise<void>((resolve, reject) => fs.writeFile(filePath, fileContent.xml, (e) => e ? reject() : resolve()))

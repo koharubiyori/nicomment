@@ -5,7 +5,7 @@ export interface Result {
 
 export default function nicoCommentResponseToXml(response: any[]) {
   const dataForXml = response
-    .filter(item => item.chat)
+    .filter(item => item.chat && !item.chat.deleted)
     .map(item => item.chat)
   const xmlDocument = new Document()
   const packetEl = xmlDocument.createElement('packet')
