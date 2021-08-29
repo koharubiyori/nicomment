@@ -165,7 +165,7 @@ function SidePanel(props: Props) {
       </Box>
       <Box>
         <FormControl fullWidth>
-          <InputLabel>{i18n.viewCount}</InputLabel>
+          <InputLabel>{i18n.viewCounts}</InputLabel>
           <Select fullWidth
             value={searchForm.viewCount}
             onChange={e => setSearchFormItem('viewCount', e.target.value as ViewCountType)}
