@@ -93,14 +93,16 @@ const nicoApi = {
       .reduce((result: any[], item: any, index) => {
         return result.concat(dataBlock(index * 2, {
           fork: item.fork,
-          thread: item.id,
+          thread: item.id.toString(),
           ...(item.label === 'default' ? { userKey } : {}),
           ...(item.isThreadkeyRequired ? { threadkey: item.threadkey } : {}),
           ...(item.is184Forced ? { force_184: '1' } : {})
         }))
       }, [])
 
-    return nicoRequest.post('https://nmsg.nicovideo.jp/api.json', {
+    const usingUrl = videoInfo.comment.server.url.replace(/\/$/, '.json')
+
+    return nicoRequest.post(usingUrl, {
       headers: {
         'Content-Type': 'text/plain;charset=UTF-8'
       },

@@ -1,5 +1,5 @@
 import { notify } from './../utils/notify';
-import got, { RequestError } from 'got'
+import got, { Options, RequestError } from 'got'
 import { CookieJar } from 'tough-cookie'
 import logger from './logger'
 
@@ -8,24 +8,24 @@ const nicoCookieJar = new CookieJar()
 export const nicoRequest = got.extend({
   cookieJar: nicoCookieJar,
   headers: {
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    'Accept': '*/*',
     'Accept-Language': 'ja',
     'Cache-Control': 'no-cache',
     'Connection': 'keep-alive',
     'DNT': '1',
     'Pragma': 'no-cache',
-    'sec-ch-ua': '" Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91"',
+    'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="92"',
     'sec-ch-ua-mobile': '?0',
-    'Sec-Fetch-Dest': 'document',
-    'Sec-Fetch-Mode': 'navigate',
-    'Sec-Fetch-Site': 'same-origin',
-    'Sec-Fetch-User': '?1',
-    'Upgrade-Insecure-Requests': '1',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-site',
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Safari/537.36',
+    'Origin': 'https://www.nicovideo.jp',
+    'Referer': 'https://www.nicovideo.jp/'
   },
 
   hooks: {
-    beforeRequest: [logger.request],
+    beforeRequest: [addHostToHeaders, logger.request],
     afterResponse: [logger.response],
     beforeError: [errorHook]
   }
@@ -34,4 +34,8 @@ export const nicoRequest = got.extend({
 function errorHook(error: RequestError) {
   notify.error('网络错误')
   return error
+}
+
+function addHostToHeaders(options: Options) {
+  options.headers!['Host'] = (options.url as URL).hostname
 }

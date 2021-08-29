@@ -17,7 +17,7 @@ const requestLogger: BeforeRequestHook = (options) => {
   options.url.searchParams.forEach((val, name) => queryParams[name] = val)
 
   if (options.method === 'POST') {
-    reqLog('request', url, options.json, queryParams, options)
+    reqLog('request', url, options.json, options.body ? JSON.parse(options.body as string) : options.json, options)
   } else {
     reqLog('request', url, queryParams, undefined, options)
   }
