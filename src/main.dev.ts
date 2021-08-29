@@ -12,15 +12,14 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
 import { app, BrowserWindow, Menu, shell } from 'electron';
-import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import initIpcHub from './ipcHub/index'
 
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'warn';
-    autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify();
+    // autoUpdater.logger = log;
+    // autoUpdater.checkForUpdatesAndNotify();
   }
 }
 
