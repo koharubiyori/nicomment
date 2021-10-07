@@ -1,14 +1,16 @@
 import { Box, Button, FormControl, FormControlLabel, IconButton, InputAdornment, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField, Typography } from '@material-ui/core'
 import clsx from 'clsx'
-import React, { useEffect, useState } from 'react'
+import React, { MouseEvent, useEffect, useState } from 'react'
 import path from 'path'
 import { appIpcClient } from '~/ipcHub/modules/app'
 import { dialogIpcClient } from '~/ipcHub/modules/dialog'
-import settingsPref from '~/prefs/settingsPref'
+import settingsPrefs from '~/prefs/settingsPrefs'
 import { setCurrentLanguage, useI18n } from '~/utils/i18n'
 import { notify } from '~/utils/notify'
 import classes from './index.scss'
-import { Visibility, VisibilityOff } from '@material-ui/icons'
+import { Visibility, VisibilityOff, Close } from '@material-ui/icons'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import cachePrefs from '~/prefs/cachePrefs'
 
 export interface Props {
   onSearch(searchFormValues: SearchFormValues): void
@@ -23,7 +25,7 @@ export interface SearchFormValues {
   viewCount: ViewCountType
 }
 
-export type SettingsFormValues = typeof settingsPref
+export type SettingsFormValues = typeof settingsPrefs
 
 export type SequenceType =
     'commentMost'
@@ -64,8 +66,10 @@ function SidePanel(props: Props) {
     viewCount: 'none'
   })
   const [smOrSoCode, setSmOrSoCode] = useState('')
-  const [settingsForm, setSettingsForm] = useState(() => ({ ...settingsPref }))
+  const [settingsForm, setSettingsForm] = useState(() => ({ ...settingsPrefs }))
   const [showPassword, setShowPassword] = useState(false)
+  const [searchHistory, setSearchHistory] = useState(cachePrefs.searchHistory)
+  const [isKeywordInputFocused, setIsKeywordInputFocused] = useState(false)
 
   useEffect(() => {
     if (settingsForm.pathOfSave) { return }
@@ -86,8 +90,8 @@ function SidePanel(props: Props) {
 
   function setSettingsFormItem<T extends keyof typeof settingsForm>(itemName: T, value: (typeof settingsForm)[T]) {
     setSettingsForm(prevVal => ({ ...prevVal, [itemName]: value }))
-    settingsPref[itemName] = value
-    props.onSettingsChange(settingsPref)
+    settingsPrefs[itemName] = value
+    props.onSettingsChange(settingsPrefs)
   }
 
   async function showDirSelectDialog() {
@@ -110,6 +114,12 @@ function SidePanel(props: Props) {
     }
 
     props.onSearch(searchForm)
+
+    setSearchHistory(prevVal => {
+      const newVal = prevVal.concat([searchForm.keyword])
+      if (newVal.length > 6) newVal.pop()
+      return newVal
+    })
   }
 
   function codeSearch() {
@@ -124,6 +134,15 @@ function SidePanel(props: Props) {
     props.onCodeSearch(smOrSoCode)
   }
 
+  function handleOnDeleteIconOfSearchRecordClick(e: MouseEvent, recordName: string) {
+    e.stopPropagation()
+    setSearchHistory(prevVal => {
+      const newVal = prevVal.filter(item => item !== recordName)
+      cachePrefs.searchHistory = newVal
+      return newVal
+    })
+  }
+
   const sequenceList = Object.entries(i18n.sequenceTypes)
   const durationList = Object.entries(i18n.durationTypes)
   const viewCountList = Object.entries(i18n.viewCountTypes)
@@ -131,10 +150,27 @@ function SidePanel(props: Props) {
   return (
     <div className={clsx(classes.sideMenuContainer, 'flex-column')}>
       <Box style={{ marginTop: 0 }}>
-        <TextField fullWidth
-          label={i18n.keywordSearch}
-          onChange={e => setSearchFormItem('keyword', e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && search()}
+        <Autocomplete
+          options={searchHistory}
+          open={searchForm.keyword === '' && isKeywordInputFocused}
+          clearOnBlur={false}
+          noOptionsText={i18n.noRecordOfSearchHistory}
+          popupIcon={null}
+          renderOption={(recordName, state) =>
+            <div className="flex-row flex-between">
+              <div>{recordName}</div>
+              <Close fontSize="small" style={{ fill: '#757575' }} onClick={(e) => handleOnDeleteIconOfSearchRecordClick(e, recordName)} />
+            </div>
+          }
+          renderInput={(params) =>
+            <TextField {...params} fullWidth
+              label={i18n.keywordSearch}
+              onChange={e => setSearchFormItem('keyword', e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && search()}
+              onFocus={() => setIsKeywordInputFocused(true)}
+              onBlur={() => setIsKeywordInputFocused(false)}
+            />
+          }
         />
       </Box>
       <Box>

@@ -4,6 +4,7 @@ import useSafePopover from '~/hooks/useSafePopover'
 import MainLayout from '~/layout/index'
 import { I18nProvider } from '~/utils/i18n'
 import { NotifyProvider } from '~/utils/notify'
+import { RootParentProvider } from './hooks/useRootParent'
 import Routes from './routes'
 import theme from './theme'
 
@@ -15,9 +16,11 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <I18nProvider>
         <NotifyProvider maxSnack={3}>
-          <MainLayout>
-            <Routes />
-          </MainLayout>
+          <RootParentProvider>
+            <MainLayout>
+              <Routes />
+            </MainLayout>
+          </RootParentProvider>
         </NotifyProvider>
       </I18nProvider>
     </ThemeProvider>

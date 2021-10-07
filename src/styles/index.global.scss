@@ -13,3 +13,13 @@ html, body {
     background-color: rgba(255, 255, 255, 0.1) !important
   }
 }
+
+.MuiButton-containedPrimary:not(foo) {
+  &:hover {
+    background-color: map-get($map: $colors, $key: 'light');
+  }
+}
+
+.snackWarning:not(foo) {
+  background-color: #f77e26;
+}

@@ -7,6 +7,7 @@ const nicoCookieJar = new CookieJar()
 
 export const nicoRequest = got.extend({
   cookieJar: nicoCookieJar,
+  timeout: 7_000,
   headers: {
     'Accept': '*/*',
     'Accept-Language': 'ja',

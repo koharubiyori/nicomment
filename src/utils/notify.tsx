@@ -41,6 +41,10 @@ export function NotifyProvider(props: NotifyProviderProps) {
   }, [])
 
   return (
-    <SnackbarProvider {...props} ref={snackbarRef} />
+    <SnackbarProvider
+      {...props}
+      classes={{ variantWarning: 'snackWarning' }}
+      ref={snackbarRef}
+    />
   )
 }

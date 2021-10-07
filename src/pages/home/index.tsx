@@ -6,10 +6,10 @@ import { ReactComponent as NoDataIcon } from '~/assets/icons/nodata.svg'
 import nicoApi from '~/api/nico'
 import { notify } from '~/utils/notify'
 import Skeleton from 'react-loading-skeleton'
-import VideoItem from './components/videoItem'
+import VideoItem, { VideoItemAction } from './components/videoItem'
 import moment from 'moment'
-import settingsPref from '~/prefs/settingsPref'
-import { CircularProgress } from '@material-ui/core'
+import settingsPrefs from '~/prefs/settingsPrefs'
+import { Checkbox, CircularProgress, useTheme } from '@material-ui/core'
 import useStateWithRef from '~/hooks/useStateWithRef'
 import { throttle } from 'throttle-debounce'
 import nicoCommentResponseToXml from '~/utils/nicoCommentResponseToXml'
@@ -25,12 +25,15 @@ interface SearchConfig {
 function HomePage() {
   const i18n = useI18n()
   const [videoList, setVideoList, videoListRef] = useStateWithRef([])
-  // 1:初始化，2：加载，2.1：初始化加载，3：完成，4：全部加载完成，5：空内容
-  const [videoListStatus, setVideoListStatus, videoListStatusRef] = useStateWithRef<1 | 2 | 2.1 | 3 | 4 | 5>(1)
+  const [videoListStatus, setVideoListStatus, videoListStatusRef] = useStateWithRef<LoadStatus>(1)
+
+  const [isMultipleSelect, setIsMultipleSelect] = useState(false)
+  const [selectedVideoIds, setSelectedVideoIds] = useState<string[]>([])
+
   const loginFlagRef = useRef(false)
   const searchConfigRef = useRef<SearchConfig>({
     search: undefined,
-    settings: settingsPref
+    settings: settingsPrefs
   })
   const videoListElRef = useRef<HTMLDivElement>()
 
@@ -187,6 +190,16 @@ function HomePage() {
     }
   }
 
+  function handleOnVideoItemClick(action: VideoItemAction, itemData: any) {
+    if (action === 'multipleSelect') {
+      setIsMultipleSelect(true)
+      setSelectedVideoIds(prevVal => prevVal.concat([itemData.contentId]))
+    }
+    if (action === 'gotoVideoContent') {
+      window.open('https://nico.ms/' + itemData.contentId)
+    }
+  }
+
   function formatDuration(seconds: number) {
     if (seconds < 60) {
       return seconds + i18n.second
@@ -219,20 +232,33 @@ function HomePage() {
         }
 
         {videoList.map((item: any) =>
-          <VideoItem
-            key={item.contentId}
-            title={item.title}
-            description={item.description}
-            duration={formatDuration(item.lengthSeconds)}
-            thumbnailUrl={item.thumbnailUrl}
-            likeCount={item.likeCounter}
-            commentCount={item.commentCounter}
-            viewCount={item.viewCounter}
-            mylistCount={item.mylistCounter}
-            publishTime={moment(item.startTime).format(i18n.basicDateFormatForMoment)}
-            tags={item.tags.split(' ')}
-            onClick={() => downloadDanmaku(item.contentId, item.title)}
-          />
+          <div key={item.contentId} className="flex-row flex-cross-center">
+            {isMultipleSelect &&
+              <Checkbox
+                checked={selectedVideoIds.includes(item.contentId)}
+                color="primary"
+                style={{ margin: 20 }}
+                onChange={(e) => setSelectedVideoIds(prevVal => e.target.checked
+                  ? prevVal.concat([item.contentId])
+                  : prevVal.filter(videoId => videoId !== item.contentId)
+                )}
+              />
+            }
+            <VideoItem
+              title={item.title}
+              description={item.description}
+              duration={formatDuration(item.lengthSeconds)}
+              thumbnailUrl={item.thumbnailUrl}
+              likeCount={item.likeCounter}
+              commentCount={item.commentCounter}
+              viewCount={item.viewCounter}
+              mylistCount={item.mylistCounter}
+              publishTime={moment(item.startTime).format(i18n.basicDateFormatForMoment)}
+              tags={item.tags.split(' ')}
+              onClick={() => downloadDanmaku(item.contentId, item.title)}
+              onActionClick={(action) => handleOnVideoItemClick(action, item)}
+            />
+          </div>
         )}
 
         {videoListStatus === 2 &&

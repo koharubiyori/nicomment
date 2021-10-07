@@ -8,6 +8,7 @@ const zhLanguageMap = {
   second: '秒',
   minute: '分',
   duration: '时长',
+  select: '选择',
 
   keywordSearch: '关键词搜索',
   locationOfSave: '保存位置',
@@ -19,6 +20,7 @@ const zhLanguageMap = {
   commentCounts: '弹幕量',
   publishDate: '投稿日期',
   durationForVideoItem: '时　长',
+  gotoVideoPage: '前往视频页',
 
   selectLocationOfSave: '选择保存位置',
   emptyKeywordHintForSearch: '搜索关键词不能为空',
@@ -34,6 +36,7 @@ const zhLanguageMap = {
   basicDateFormatForMoment: 'YYYY年MM月DD日 HH:mm:ss',
   allLoadedHintOfSearchResult: '你已经触碰到我的底线了ψ(╰_╯)',
   emptyHintOfSearchResult: '什么也没搜到...',
+  noRecordOfSearchHistory: '暂无搜索记录',
 
   sequenceTypes: {
     commentMost: '弹幕最多',
