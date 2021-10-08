@@ -1,7 +1,7 @@
 import { Dialog, DialogTitle } from '@material-ui/core'
 import React, { createContext, useState } from 'react'
 import ReactDOM from 'react-dom'
-import { globalRootParent } from '~/hooks/useRootParent'
+import { globalRootParent } from '~/utils/rootParent'
 import { useI18n } from '~/utils/i18n'
 
 export interface Props {
