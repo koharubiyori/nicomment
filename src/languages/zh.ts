@@ -21,6 +21,7 @@ const zhLanguageMap = {
   publishDate: '投稿日期',
   durationForVideoItem: '时　长',
   gotoVideoPage: '前往视频页',
+  netErr: '网络错误',
 
   selectLocationOfSave: '选择保存位置',
   emptyKeywordHintForSearch: '搜索关键词不能为空',
@@ -31,7 +32,7 @@ const zhLanguageMap = {
   loginFailHint: '登录失败，请核对登录信息并确认网络环境',
   startHintOfDownloadComments: '开始下载弹幕：',
   successHintOfDownloadComments: (title: string, total: number) => `弹幕保存成功：${title}，实际保存${total}条`,
-  failHintOfSaveComments: '文件保存失败',
+  failHintOfSaveComments: '文件创建失败',
   failHintOfDownloadComments: '弹幕下载失败',
   basicDateFormatForMoment: 'YYYY年MM月DD日 HH:mm:ss',
   allLoadedHintOfSearchResult: '你已经触碰到我的底线了ψ(╰_╯)',

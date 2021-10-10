@@ -34,7 +34,7 @@ const nicoApi = {
       },
       json: { mail, password }
     })
-      .then(res => res.headers['x-niconico-authflag'] === '0')
+      .then(res => !res.headers['set-cookie']!.some(item => /^mail_for_retry/.test(item)))
   },
 
   search(options: NicoSearchOptions) {

@@ -53,14 +53,14 @@ function HomePage() {
   function login(mail: string, password: string) {
     notify(i18n.tryLoginHint)
     return nicoApi.login(mail, password)
-      .then(() => {
-        loginFlagRef.current = true
-        notify.success(i18n.loginSuccessHint)
-      })
-      .catch(e => {
-        console.log(e)
-        notify.error(i18n.loginFailHint)
-        throw e
+      .then((result) => {
+        if (result) {
+          loginFlagRef.current = true
+          notify.success(i18n.loginSuccessHint)
+        } else {
+          notify.error(i18n.loginFailHint)
+          throw { netErr: true }
+        }
       })
   }
 
@@ -156,14 +156,15 @@ function HomePage() {
   }
 
   async function downloadDanmaku(id: string, title?: string) {
-    if (!loginFlagRef.current) await login(
-      searchConfigRef.current.settings!.mail,
-      searchConfigRef.current.settings!.password
-    )
-
-    const displayTitle = title?.replace(/^([\s\S]{15})[\s\S]+$/, '$1...') ?? id
-    notify(i18n.startHintOfDownloadComments + displayTitle, ['top', 'right'])
     try {
+      if (!loginFlagRef.current) await login(
+        searchConfigRef.current.settings!.mail,
+        searchConfigRef.current.settings!.password
+      )
+
+      const displayTitle = title?.replace(/^([\s\S]{15})[\s\S]+$/, '$1...') ?? id
+      notify(i18n.startHintOfDownloadComments + displayTitle, ['top', 'right'])
+
       const videoInfo = await nicoApi.getVideoInfo(id)
       const comments = (await nicoApi.getComments(videoInfo)) as any[]
       const fileContent = nicoCommentResponseToXml(comments)

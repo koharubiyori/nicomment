@@ -48,7 +48,7 @@ export function RootParentBase(props: PropsWithChildren<{}>) {
 
   return <>
     {props.children}
-    {registeredChildren}
+    {React.cloneElement(<></>, {}, ...registeredChildren)}
   </>
 }
 

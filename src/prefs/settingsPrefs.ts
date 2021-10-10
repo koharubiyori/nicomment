@@ -1,5 +1,4 @@
 import { SupportedLanguages } from '~/utils/i18n'
-import storage from '~/utils/storage'
 import PlainPrefs from './utils/plainPrefs'
 
 const _settingsPrefs = new PlainPrefs('settingsPrefs', {
@@ -8,7 +7,7 @@ const _settingsPrefs = new PlainPrefs('settingsPrefs', {
   pathOfSave: '',
   intervalOfGet: 500,
   numberOfRetry: 2,
-  language: 'zh' as SupportedLanguages,
+  language: 'jp' as SupportedLanguages,
 })
 
 const settingsPrefs = _settingsPrefs.prefs

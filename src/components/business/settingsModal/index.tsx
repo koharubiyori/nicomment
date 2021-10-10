@@ -3,33 +3,37 @@ import React, { createContext, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { globalRootParent } from '~/utils/rootParent'
 import { useI18n } from '~/utils/i18n'
+import classes from './index.scss'
 
 export interface Props {
 
 }
 
-export interface SettingsModalClient {
-  show(): void
-}
+let setIsOpenExternalRefer: React.Dispatch<React.SetStateAction<boolean>> = null as any
 
-// let settingsModal =
+export function showSettingsModal() {
+  setIsOpenExternalRefer(true)
+}
 
 function SettingsModal(props: Props) {
   const i18n = useI18n()
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
-  return <div>123</div>
-  // return (
-  //   <Dialog
-  //     open={isOpen}
-  //   >
-  //     <DialogTitle>123</DialogTitle>
-  //   </Dialog>
-  // )
+  setIsOpenExternalRefer = setIsOpen
+
+  if (!i18n) return null
+  return (
+    <Dialog
+      open={isOpen}
+      onClose={() => setIsOpen(false)}
+    >
+      <DialogTitle>{i18n.settings}</DialogTitle>
+      <div className={classes.title}></div>
+    </Dialog>
+  )
 }
 
 export default SettingsModal
 
-export function showSettingsModal() {
-  const unregister = globalRootParent().registerRootChild(<SettingsModal />)
-}
+
+globalRootParent().registerRootChild(<SettingsModal />)

@@ -72,7 +72,7 @@ function VideoItem(props: Props) {
       >
         <Paper>
           <MenuList>
-            <MenuItem onClick={() => triggerAction('multipleSelect')}>{i18n.select}</MenuItem>
+            {/* <MenuItem onClick={() => triggerAction('multipleSelect')}>{i18n.select}</MenuItem> */}
             <MenuItem onClick={() => triggerAction('gotoVideoContent')}>{i18n.gotoVideoPage}</MenuItem>
           </MenuList>
         </Paper>

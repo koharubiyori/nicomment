@@ -84,6 +84,10 @@ function SidePanel(props: Props) {
     setCurrentLanguage(settingsForm.language)
   }, [settingsForm.language])
 
+  useEffect(() => {
+    cachePrefs.searchHistory = searchHistory
+  }, [searchHistory])
+
   function setSearchFormItem<T extends keyof typeof searchForm>(itemName: T, value: (typeof searchForm)[T]) {
     setSearchForm(prevVal => ({ ...prevVal, [itemName]: value }))
   }
@@ -116,7 +120,7 @@ function SidePanel(props: Props) {
     props.onSearch(searchForm)
 
     setSearchHistory(prevVal => {
-      const newVal = prevVal.concat([searchForm.keyword])
+      const newVal = Array.from(new Set(prevVal.concat([searchForm.keyword])))
       if (newVal.length > 6) newVal.pop()
       return newVal
     })
@@ -156,6 +160,7 @@ function SidePanel(props: Props) {
           clearOnBlur={false}
           noOptionsText={i18n.noRecordOfSearchHistory}
           popupIcon={null}
+          onChange={(e, val) => setSearchFormItem('keyword', val ?? '')}
           renderOption={(recordName, state) =>
             <div className="flex-row flex-between">
               <div>{recordName}</div>
@@ -165,7 +170,7 @@ function SidePanel(props: Props) {
           renderInput={(params) =>
             <TextField {...params} fullWidth
               label={i18n.keywordSearch}
-              onChange={e => setSearchFormItem('keyword', e.target.value)}
+              value={searchForm.keyword}
               onKeyDown={e => e.key === 'Enter' && search()}
               onFocus={() => setIsKeywordInputFocused(true)}
               onBlur={() => setIsKeywordInputFocused(false)}

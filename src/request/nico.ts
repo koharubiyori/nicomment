@@ -2,6 +2,7 @@ import { notify } from './../utils/notify';
 import got, { Options, RequestError } from 'got'
 import { CookieJar } from 'tough-cookie'
 import logger from './logger'
+import { globalI18n } from '~/utils/i18n'
 
 const nicoCookieJar = new CookieJar()
 
@@ -33,7 +34,7 @@ export const nicoRequest = got.extend({
 })
 
 function errorHook(error: RequestError) {
-  notify.error('网络错误')
+  notify.error(globalI18n().netErr)
   return error
 }
 
