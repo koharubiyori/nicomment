@@ -6,8 +6,57 @@
 }
 
 .timeline {
-  width: 80%;
-  height: 3px;
+  width: 90%;
+  height: 5px;
   margin: 0 auto;
   display: flex;
+  position: relative;
+
+  :global {
+    .beginPoint, .endPoint {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      border: 4px rgb(113, 127, 249) solid;
+
+      &.endPoint {
+        left: initial;
+        right: 0;
+        transform: translate(50%, -50%);
+      }
+    }
+
+    .beginTime, .endTime {
+      position: absolute;
+      left: 0;
+      top: 30px;
+      transform: translateX(-50%);
+
+      &.endTime {
+        left: initial;
+        right: 0;
+        transform: translateX(50%);
+      }
+    }
+
+    .fragment {
+      height: 100%;
+      background-color: rgb(113, 127, 249);
+      box-sizing: border-box;
+      border: 1px white solid;
+
+      &[data-type="add"] {
+        background-color: #5AF158;
+      }
+
+      &[data-type="delete"] {
+        background-color: #FF6E40;
+      }
+    }
+  }
 }
