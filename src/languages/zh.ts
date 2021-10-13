@@ -9,6 +9,14 @@ const zhLanguageMap = {
   minute: '分',
   duration: '时长',
   select: '选择',
+  operate: '操作',
+  in: '在',
+  place: '处',
+  insert: '插入',
+  delete: '删除',
+  add: '添加',
+  hold: '把',   // 这个和do纯粹是为了日语...
+  do: 'する',
 
   keywordSearch: '关键词搜索',
   locationOfSave: '保存位置',
@@ -22,6 +30,7 @@ const zhLanguageMap = {
   durationForVideoItem: '时　长',
   gotoVideoPage: '前往视频页',
   netErr: '网络错误',
+  timeModify: '时间调整',
 
   selectLocationOfSave: '选择保存位置',
   emptyKeywordHintForSearch: '搜索关键词不能为空',
@@ -38,6 +47,10 @@ const zhLanguageMap = {
   allLoadedHintOfSearchResult: '你已经触碰到我的底线了ψ(╰_╯)',
   emptyHintOfSearchResult: '什么也没搜到...',
   noRecordOfSearchHistory: '暂无搜索记录',
+  insertZeroSecondHint: '要插入秒数不能为0',
+  timeRangeConflictHint: '要添加的修改时间段和其他时间段存在冲突',
+  hintForTimelineChartOfTimeModify: '注：为便于操作，上图仅表示相对比例。',
+
 
   sequenceTypes: {
     commentMost: '弹幕最多',

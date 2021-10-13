@@ -113,9 +113,9 @@ function SidePanel(props: Props) {
       return notify.warning(i18n.emptyKeywordHintForSearch)
     }
 
-    if (settingsForm.mail.trim().length === 0 || settingsForm.password.trim().length === 0) {
-      return notify.warning(i18n.emptyLoginInfoHintForSearch)
-    }
+    // if (settingsForm.mail.trim().length === 0 || settingsForm.password.trim().length === 0) {
+    //   return notify.warning(i18n.emptyLoginInfoHintForSearch)
+    // }
 
     props.onSearch(searchForm)
 
@@ -172,6 +172,7 @@ function SidePanel(props: Props) {
               label={i18n.keywordSearch}
               value={searchForm.keyword}
               onKeyDown={e => e.key === 'Enter' && search()}
+              onChange={(e) => setSearchFormItem('keyword', e.target.value)}
               onFocus={() => setIsKeywordInputFocused(true)}
               onBlur={() => setIsKeywordInputFocused(false)}
             />

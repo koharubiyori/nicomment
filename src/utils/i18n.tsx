@@ -28,8 +28,12 @@ export function setCurrentLanguage(language: SupportedLanguages) {
   if (setLanguageFn !== null) setLanguageFn(language)
 }
 
+export function useCurrentLanguage() {
+  return useContext(i18nContext)
+}
+
 export function useI18n() {
-  const currentLanguage = useContext(i18nContext)
+  const currentLanguage = useCurrentLanguage()
   return languages[currentLanguage]
 }
 

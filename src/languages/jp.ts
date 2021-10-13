@@ -11,6 +11,14 @@ const jpLanguageMap: LanguageMap = {
   minute: '分',
   duration: '再生時間',
   select: '選択',
+  operate: '操作',
+  in: 'で',
+  place: 'ところ',
+  insert: '挿入',
+  delete: '削除',
+  add: '追加',
+  hold: 'を',
+  do: 'する',
 
   keywordSearch: 'キーワード検索',
   locationOfSave: '保存位置',
@@ -24,6 +32,7 @@ const jpLanguageMap: LanguageMap = {
   durationForVideoItem: '再生時間',
   gotoVideoPage: '動画ページへ',
   netErr: 'ネットエラー',
+  timeModify: 'タイミング調整',
 
   selectLocationOfSave: '保存位置を選択してください',
   emptyKeywordHintForSearch: '検索キーワードは空欄できません',
@@ -40,6 +49,9 @@ const jpLanguageMap: LanguageMap = {
   allLoadedHintOfSearchResult: '全部ロードしました',
   emptyHintOfSearchResult: '該当の動画は見つかりませんでした',
   noRecordOfSearchHistory: '検索履歴がありません',
+  insertZeroSecondHint: '0秒を挿入ことができません',
+  timeRangeConflictHint: '追加したい時間帯と追加済みの時間帯にコンフリクトがあります',
+  hintForTimelineChartOfTimeModify: '注：操作しやすいように，上の図は相対的な比例のみで表示します。',
 
   sequenceTypes: {
     commentMost: 'コメントが多い',

@@ -11,7 +11,7 @@ import { Settings as SettingsIcon } from '@material-ui/icons'
 import store from '~/store'
 import classes from './index.scss'
 import { useHistory } from 'react-router'
-import { showSettingsModal } from '~/components/business/settingsModal'
+import { showSettingsModal } from '~/components/business/danmakuPreModal'
 
 export const MyAppBarHeight = 44
 
