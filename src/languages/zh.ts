@@ -16,7 +16,8 @@ const zhLanguageMap = {
   delete: '删除',
   add: '添加',
   hold: '把',   // 这个和do纯粹是为了日语...
-  do: 'する',
+  do: '做',
+  close: '关闭',
 
   keywordSearch: '关键词搜索',
   locationOfSave: '保存位置',
@@ -31,6 +32,7 @@ const zhLanguageMap = {
   gotoVideoPage: '前往视频页',
   netErr: '网络错误',
   timeModify: '时间调整',
+  danmakuPretreatment: '弹幕预处理',
 
   selectLocationOfSave: '选择保存位置',
   emptyKeywordHintForSearch: '搜索关键词不能为空',
@@ -50,6 +52,8 @@ const zhLanguageMap = {
   insertZeroSecondHint: '要插入秒数不能为0',
   timeRangeConflictHint: '要添加的修改时间段和其他时间段存在冲突',
   hintForTimelineChartOfTimeModify: '注：为便于操作，上图仅表示相对比例。',
+  hintForDanmakuTimeModificationDeleted: '已删除时间调整',
+  hintForDanmakuTimeModificationMinimum: '调整后时长不能小于1秒',
 
 
   sequenceTypes: {

@@ -19,7 +19,7 @@ export interface Props {
   onActionClick: (action: VideoItemAction) => void
 }
 
-export type VideoItemAction = 'multipleSelect' | 'gotoVideoContent'
+export type VideoItemAction = 'showDanmakuPreModal' | 'gotoVideoContent'
 
 function VideoItem(props: Props) {
   const i18n = useI18n()
@@ -72,7 +72,7 @@ function VideoItem(props: Props) {
       >
         <Paper>
           <MenuList>
-            <MenuItem onClick={() => triggerAction('multipleSelect')}>{i18n.select}</MenuItem>
+            <MenuItem onClick={() => triggerAction('showDanmakuPreModal')}>{i18n.danmakuPretreatment}</MenuItem>
             <MenuItem onClick={() => triggerAction('gotoVideoContent')}>{i18n.gotoVideoPage}</MenuItem>
           </MenuList>
         </Paper>

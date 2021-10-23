@@ -12,7 +12,7 @@ export interface Notify {
   error (message: string, position?: NotifyPositions): void
 }
 
-export let notify: Notify = null as any
+export let notify: Notify = null!
 
 export interface NotifyProviderProps extends SnackbarProviderProps {}
 

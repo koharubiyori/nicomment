@@ -19,6 +19,7 @@ const jpLanguageMap: LanguageMap = {
   add: '追加',
   hold: 'を',
   do: 'する',
+  close: '閉じる',
 
   keywordSearch: 'キーワード検索',
   locationOfSave: '保存位置',
@@ -33,6 +34,7 @@ const jpLanguageMap: LanguageMap = {
   gotoVideoPage: '動画ページへ',
   netErr: 'ネットエラー',
   timeModify: 'タイミング調整',
+  danmakuPretreatment: 'コメント予処理',
 
   selectLocationOfSave: '保存位置を選択してください',
   emptyKeywordHintForSearch: '検索キーワードは空欄できません',
@@ -50,8 +52,10 @@ const jpLanguageMap: LanguageMap = {
   emptyHintOfSearchResult: '該当の動画は見つかりませんでした',
   noRecordOfSearchHistory: '検索履歴がありません',
   insertZeroSecondHint: '0秒を挿入ことができません',
-  timeRangeConflictHint: '追加したい時間帯と追加済みの時間帯にコンフリクトがあります',
+  timeRangeConflictHint: '追加する時間帯と追加済みの時間帯にコンフリクトがあります',
   hintForTimelineChartOfTimeModify: '注：操作しやすいように，上の図は相対的な比例のみで表示します。',
+  hintForDanmakuTimeModificationDeleted: 'タイミング調整を削除しました',
+  hintForDanmakuTimeModificationMinimum: '調整した時間を1秒以下にすることができません',
 
   sequenceTypes: {
     commentMost: 'コメントが多い',

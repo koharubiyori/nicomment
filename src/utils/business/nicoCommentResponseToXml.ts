@@ -3,10 +3,12 @@ export interface Result {
   commentTotal: number
 }
 
-export default function nicoCommentResponseToXml(response: any[]) {
-  const dataForXml = response
+export default function nicoCommentResponseToXml(response: any[], processData?: (data: any[]) => any[]) {
+  let dataForXml = response
     .filter(item => item.chat && !item.chat.deleted)
     .map(item => item.chat)
+
+  dataForXml = processData ? processData(dataForXml) : dataForXml
   const xmlDocument = new Document()
   const packetEl = xmlDocument.createElement('packet')
 

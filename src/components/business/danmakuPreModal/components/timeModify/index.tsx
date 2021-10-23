@@ -5,6 +5,8 @@ import { useCurrentLanguage, useI18n } from '~/utils/i18n'
 import { notify } from '~/utils/notify'
 import classes from './index.scss'
 
+export type ModificationType = 'add' | 'delete'
+
 export interface TimeModification {
   addedModifications: Modification<'add'>[]
   deletedModifications: Modification<'delete'>[]
@@ -12,6 +14,7 @@ export interface TimeModification {
 
 export interface Props {
   value: TimeModification
+  danmakuData?: Record<string, any>
   onChange(val: Props['value']): void
 }
 
@@ -24,8 +27,16 @@ function DanmakuTimeModify(props: Props) {
     type: 'add' as 'add' | 'delete',
     insertSeconds: 0,
   })
-  const totalTime = 20 * 60 * 1000
+
+  const originalTime = props.danmakuData?.lengthSeconds * 1000 ?? 0
+  const totalTime = originalTime
     + props.value.addedModifications.reduce((result, item) => result + item.endTime - item.startTime, 0)
+    - props.value.deletedModifications.reduce((result, item) => result + item.endTime - item.startTime, 0)
+
+  function formatTime(ms: number) {
+    const duration = moment.duration(ms, 'millisecond')
+    return Math.floor(duration.as('minute')) + ':' + duration.seconds().toString().padStart(2, '0')
+  }
 
   // 添加调整
   function addTimeModification() {
@@ -47,6 +58,12 @@ function DanmakuTimeModify(props: Props) {
     )) {
       notify.warning(i18n.timeRangeConflictHint)
       return
+    }
+
+    const modificationTime = willAddEndTime - willAddStartTime
+
+    if (totalTime + (form.type === 'add' ? modificationTime : -modificationTime) < 1000) {
+      return notify.warning(i18n.hintForDanmakuTimeModificationMinimum)
     }
 
     if (form.type === 'add') {
@@ -115,6 +132,16 @@ function DanmakuTimeModify(props: Props) {
     }, [])
   }
 
+  function deleteModification(type: ModificationType, renderFragment: RenderFragment) {
+    const operationPropertyName: keyof typeof props.value = type === 'add' ? 'addedModifications' : 'deletedModifications'
+    notify.success(i18n.hintForDanmakuTimeModificationDeleted)
+    props.onChange({
+      ...props.value,
+      [operationPropertyName]: (props.value[operationPropertyName] as Modification[])
+        .filter(modificationItem => modificationItem !== renderFragment.source)
+    })
+  }
+
   const mainTimelineRenderFragments = useMemo(
     () => renderFragmentData('add'),
     [props.value]
@@ -144,9 +171,9 @@ function DanmakuTimeModify(props: Props) {
     }
 
   function formatTimeRangeText(modification: Modification) {
-    return moment(modification.startTime).format('mm:ss')
+    return formatTime(modification.startTime)
       + ' ~ '
-      + moment(modification.endTime).format('mm:ss')
+      + formatTime(modification.endTime)
   }
 
   return (
@@ -157,7 +184,7 @@ function DanmakuTimeModify(props: Props) {
           <div className="beginPoint" />
           <div className="endPoint" />
           <div className="beginTime">0:00</div>
-          <div className="endTime">{moment(totalTime).format('mm:ss')}</div>
+          <div className="endTime">{formatTime(totalTime)}</div>
           {mainTimelineRenderFragments.map((item, index) =>
             <Tooltip arrow
               key={index}
@@ -169,6 +196,7 @@ function DanmakuTimeModify(props: Props) {
                 data-type={item.type}
                 style={{ flex: item.rate }}
                 className="fragment"
+                onClick={() => item.type === 'add' && deleteModification('add', item)}
               />
             </Tooltip>
           )}
@@ -186,6 +214,7 @@ function DanmakuTimeModify(props: Props) {
                 data-type={item.type}
                 style={{ flex: item.rate }}
                 className="fragment"
+                onClick={() => item.type === 'delete' && deleteModification('delete', item)}
               />
             </Tooltip>
           )}
@@ -281,7 +310,7 @@ function DanmakuTimeModify(props: Props) {
 export default DanmakuTimeModify
 
 
-interface Modification<Type extends 'add' | 'delete' = 'add' | 'delete'> {
+interface Modification<Type extends ModificationType = 'add' | 'delete'> {
   type: Type
   startTime: number
   endTime: number

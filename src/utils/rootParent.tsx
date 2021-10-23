@@ -8,7 +8,7 @@ export interface RootParentClient {
   registerRootChild(content: JSX.Element): UnRegisterRootChild
 }
 
-let _rootParentClient: RootParentClient = null as any
+let _rootParentClient: RootParentClient = null!
 const rootParentClientPromiser = new Promiser<RootParentClient>()
 const rootParentClientFullback = createRootParentClientFullback()   // 在没有根父级组件的时候（可能是还未渲染完毕，或干脆没有使用），则使用后备client
 
@@ -57,8 +57,8 @@ function createRootParentClientFullback() {
   containerEl.id = 'rootParent-fullback-container'
   document.body.append(containerEl)
 
-  let _registeredChildren = { current: null as any as JSX.Element[] }
-  let fullbackClient: RootParentClient = null as any
+  let _registeredChildren = { current: null! as JSX.Element[] }
+  let fullbackClient: RootParentClient = null!
   ReactDOM.render(<RootParentFullBack />, containerEl)
 
   function RootParentFullBack() {

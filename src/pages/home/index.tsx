@@ -1,21 +1,20 @@
+import { CircularProgress } from '@material-ui/core'
 import clsx from 'clsx'
-import React, { useEffect, useRef, useState } from 'react'
-import SidePanel, { SequenceType, SearchFormValues, SettingsFormValues, DurationType, ViewCountType } from './components/sidePanel'
-import classes from './index.scss'
-import { ReactComponent as NoDataIcon } from '~/assets/icons/nodata.svg'
-import nicoApi from '~/api/nico'
-import { notify } from '~/utils/notify'
-import Skeleton from 'react-loading-skeleton'
-import VideoItem, { VideoItemAction } from './components/videoItem'
 import moment from 'moment'
-import settingsPrefs from '~/prefs/settingsPrefs'
-import { Checkbox, CircularProgress, useTheme } from '@material-ui/core'
-import useStateWithRef from '~/hooks/useStateWithRef'
+import React, { useEffect, useRef } from 'react'
+import Skeleton from 'react-loading-skeleton'
 import { throttle } from 'throttle-debounce'
-import nicoCommentResponseToXml from '~/utils/nicoCommentResponseToXml'
-import fs, { constants } from 'fs'
-import path from 'path'
+import nicoApi from '~/api/nico'
+import { ReactComponent as NoDataIcon } from '~/assets/icons/nodata.svg'
+import showDanmakuPreModal from '~/components/business/danmakuPreModal'
+import useStateWithRef from '~/hooks/useStateWithRef'
+import settingsPrefs from '~/prefs/settingsPrefs'
+import execDownloadDanmaku from '~/utils/business/downloadDanmaku'
 import { useI18n } from '~/utils/i18n'
+import { notify } from '~/utils/notify'
+import SidePanel, { DurationType, SearchFormValues, SequenceType, SettingsFormValues, ViewCountType } from './components/sidePanel'
+import VideoItem, { VideoItemAction } from './components/videoItem'
+import classes from './index.scss'
 
 interface SearchConfig {
   search?: SearchFormValues
@@ -27,8 +26,8 @@ function HomePage() {
   const [videoList, setVideoList, videoListRef] = useStateWithRef([])
   const [videoListStatus, setVideoListStatus, videoListStatusRef] = useStateWithRef<LoadStatus>(1)
 
-  const [isMultipleSelect, setIsMultipleSelect] = useState(false)
-  const [selectedVideoIds, setSelectedVideoIds] = useState<string[]>([])
+  // const [isMultipleSelect, setIsMultipleSelect] = useState(false)
+  // const [selectedVideoIds, setSelectedVideoIds] = useState<string[]>([])
 
   const loginFlagRef = useRef(false)
   const searchConfigRef = useRef<SearchConfig>({
@@ -162,27 +161,16 @@ function HomePage() {
         searchConfigRef.current.settings!.password
       )
 
-      const displayTitle = title?.replace(/^([\s\S]{15})[\s\S]+$/, '$1...') ?? id
-      notify(i18n.startHintOfDownloadComments + displayTitle, ['top', 'right'])
+      const result = await execDownloadDanmaku(id, {
+        title,
+        savePath: searchConfigRef.current.settings!.pathOfSave
+      })
 
-      const videoInfo = await nicoApi.getVideoInfo(id)
-      const comments = (await nicoApi.getComments(videoInfo)) as any[]
-      const fileContent = nicoCommentResponseToXml(comments)
-      const fileDir = searchConfigRef.current.settings!.pathOfSave
-      const filePath = path.join(fileDir, videoInfo.video.title + '.xml')
-
-      const isDirExists = await new Promise<boolean>(resolve => fs.access(fileDir, constants.F_OK, err => resolve(!err)))
-
-      // 如果保存目录不存在，创建目录
-      if (!isDirExists) {
-        await new Promise<void>((resolve, reject) => fs.mkdir(fileDir, { recursive: true }, e => e ? reject() : resolve()))
-      }
-
-      try {
-        await new Promise<void>((resolve, reject) => fs.writeFile(filePath, fileContent.xml, (e) => e ? reject() : resolve()))
-        notify.success(i18n.successHintOfDownloadComments(videoInfo.video.title, fileContent.commentTotal), ['top', 'right'])
-      } catch(e) {
-        console.log(e)
+      if (result.success) {
+        notify.success(i18n.successHintOfDownloadComments(result.videoInfo!.video.title, result.fileContent!.commentTotal), ['top', 'right'])
+      } else if (result.type === 'failedDownloadFile') {
+        notify.error(i18n.failHintOfDownloadComments, ['top', 'right'])
+      } else if (result.type === 'failedSaveFile') {
         notify.error(i18n.failHintOfSaveComments, ['top', 'right'])
       }
     } catch(e) {
@@ -191,10 +179,24 @@ function HomePage() {
     }
   }
 
-  function handleOnVideoItemClick(action: VideoItemAction, itemData: any) {
-    if (action === 'multipleSelect') {
-      setIsMultipleSelect(true)
-      setSelectedVideoIds(prevVal => prevVal.concat([itemData.contentId]))
+  async function handleOnVideoItemClick(action: VideoItemAction, itemData: any) {
+    if (action === 'showDanmakuPreModal') {
+      try {
+        if (!loginFlagRef.current) await login(
+          searchConfigRef.current.settings!.mail,
+          searchConfigRef.current.settings!.password
+        )
+      } catch (e) {
+        console.log(e)
+        notify.error(i18n.failHintOfDownloadComments, ['top', 'right'])
+      }
+
+      showDanmakuPreModal({
+        danmakuData: itemData,
+        savePath: searchConfigRef.current.settings!.pathOfSave
+      })
+      // setIsMultipleSelect(true)
+      // setSelectedVideoIds(prevVal => prevVal.concat([itemData.contentId]))
     }
     if (action === 'gotoVideoContent') {
       window.open('https://nico.ms/' + itemData.contentId)
@@ -234,7 +236,7 @@ function HomePage() {
 
         {videoList.map((item: any) =>
           <div key={item.contentId} className="flex-row flex-cross-center">
-            {isMultipleSelect &&
+            {/* {isMultipleSelect &&
               <Checkbox
                 checked={selectedVideoIds.includes(item.contentId)}
                 color="primary"
@@ -244,7 +246,7 @@ function HomePage() {
                   : prevVal.filter(videoId => videoId !== item.contentId)
                 )}
               />
-            }
+            } */}
             <VideoItem
               title={item.title}
               description={item.description}

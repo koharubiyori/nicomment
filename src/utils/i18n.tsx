@@ -11,7 +11,7 @@ export interface I18nProviderProps {
   defaultLanguage?: SupportedLanguages
 }
 
-let setLanguageFn: React.Dispatch<React.SetStateAction<SupportedLanguages>> = null as any
+let setLanguageFn: React.Dispatch<React.SetStateAction<SupportedLanguages>> = null!
 let currentLanguage: SupportedLanguages = 'zh'
 
 export function I18nProvider(props: PropsWithChildren<I18nProviderProps>) {
