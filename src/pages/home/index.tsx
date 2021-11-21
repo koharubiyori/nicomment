@@ -49,11 +49,7 @@ function HomePage() {
     return () => videoListElRef.current?.removeEventListener('scroll', handler)
   }, [])
 
-  function login(mail?: string, password?: string) {
-    if (!mail || !password) {
-      return notify(i18n.emptyLoginInfoHintForSearch)
-    }
-
+  function login(mail: string, password: string) {
     notify(i18n.tryLoginHint)
     return nicoApi.login(mail, password)
       .then((result) => {
@@ -159,6 +155,10 @@ function HomePage() {
   }
 
   async function downloadDanmaku(id: string, title?: string) {
+    if (!searchConfigRef.current.settings?.mail || !searchConfigRef.current.settings.password) {
+      return notify(i18n.emptyLoginInfoHintForSearch)
+    }
+
     try {
       if (!loginFlagRef.current) await login(
         searchConfigRef.current.settings!.mail,
@@ -185,6 +185,10 @@ function HomePage() {
 
   async function handleOnVideoItemClick(action: VideoItemAction, itemData: any) {
     if (action === 'showDanmakuPreModal') {
+      if (!searchConfigRef.current.settings?.mail || !searchConfigRef.current.settings.password) {
+        return notify(i18n.emptyLoginInfoHintForSearch)
+      }
+
       try {
         if (!loginFlagRef.current) await login(
           searchConfigRef.current.settings!.mail,
