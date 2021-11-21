@@ -49,7 +49,11 @@ function HomePage() {
     return () => videoListElRef.current?.removeEventListener('scroll', handler)
   }, [])
 
-  function login(mail: string, password: string) {
+  function login(mail?: string, password?: string) {
+    if (!mail || !password) {
+      return notify(i18n.emptyLoginInfoHintForSearch)
+    }
+
     notify(i18n.tryLoginHint)
     return nicoApi.login(mail, password)
       .then((result) => {
