@@ -225,6 +225,7 @@ function HomePage() {
     <div className={clsx(classes.container, 'flex-row')}>
       <SidePanel
         onSearch={search}
+        onAccountInfoChange={() => loginFlagRef.current = false}
         onSettingsChange={settings => searchConfigRef.current.settings = settings}
         onCodeSearch={code => downloadDanmaku(code, code)}
       />

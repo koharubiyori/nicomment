@@ -14,6 +14,7 @@ import cachePrefs from '~/prefs/cachePrefs'
 
 export interface Props {
   onSearch(searchFormValues: SearchFormValues): void
+  onAccountInfoChange(): void
   onSettingsChange(settingsFormValues: SettingsFormValues): void
   onCodeSearch(code: string): void
 }
@@ -257,7 +258,10 @@ function SidePanel(props: Props) {
         <TextField fullWidth
           label={i18n.mail}
           value={settingsForm.mail}
-          onChange={e => setSettingsFormItem('mail', e.target.value)}
+          onChange={e => {
+            setSettingsFormItem('mail', e.target.value)
+            props.onAccountInfoChange()
+          }}
         />
       </Box>
       <Box>
@@ -265,7 +269,10 @@ function SidePanel(props: Props) {
           type={showPassword ? 'text' : 'password'}
           label={i18n.password}
           value={settingsForm.password}
-          onChange={e => setSettingsFormItem('password', e.target.value)}
+          onChange={e => {
+            setSettingsFormItem('password', e.target.value)
+            props.onAccountInfoChange()
+          }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
