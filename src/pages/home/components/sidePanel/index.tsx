@@ -71,6 +71,7 @@ function SidePanel(props: Props) {
   const [showPassword, setShowPassword] = useState(false)
   const [searchHistory, setSearchHistory] = useState(cachePrefs.searchHistory)
   const [isKeywordInputFocused, setIsKeywordInputFocused] = useState(false)
+  const [isInvalidProxyUrl, setIsInvalidProxyUrl] = useState(false)
 
   useEffect(() => {
     if (settingsForm.pathOfSave) { return }
@@ -97,6 +98,13 @@ function SidePanel(props: Props) {
     setSettingsForm(prevVal => ({ ...prevVal, [itemName]: value }))
     settingsPrefs[itemName] = value
     props.onSettingsChange(settingsPrefs)
+  }
+
+  function setProxySettingsFormItem<T extends keyof typeof settingsForm.proxy>(itemName: T, value: (typeof settingsForm.proxy)[T]) {
+    setSettingsFormItem('proxy', {
+      ...settingsForm.proxy,
+      [itemName]: value
+    })
   }
 
   async function showDirSelectDialog() {
@@ -147,6 +155,14 @@ function SidePanel(props: Props) {
   const sequenceList = Object.entries(i18n.sequenceTypes)
   const durationList = Object.entries(i18n.durationTypes)
   const viewCountList = Object.entries(i18n.viewCountTypes)
+  const proxyTypeMap: Record<typeof settingsForm.proxy.type, string> = {
+    direct: i18n.directConnect,
+    http: 'http',
+    socks: 'socks'
+  }
+  const proxyTypeList = Object.entries(proxyTypeMap)
+
+  const isUsingProxy = settingsForm.proxy.type !== 'direct'
 
   return (
     <div className={clsx(classes.sideMenuContainer, 'flex-column')}>
@@ -308,6 +324,57 @@ function SidePanel(props: Props) {
           onChange={e => setSettingsFormItem('numberOfRetry', parseInt(e.target.value))}
         />
       </Box> */}
+      <Typography variant="subtitle1" style={{ marginTop: 20, marginBottom: 10 }}>{i18n.proxySettings}</Typography>
+      <Box style={{ marginTop: 0 }}>
+        <FormControl fullWidth>
+          <InputLabel>{i18n.type}</InputLabel>
+          <Select fullWidth
+            value={settingsForm.proxy.type}
+            onChange={e => setProxySettingsFormItem('type', e.target.value as typeof settingsPrefs.proxy.type)}
+          >
+            {proxyTypeList.map(([value, label]) =>
+              <MenuItem value={value} key={value}>{label}</MenuItem>
+            )}
+          </Select>
+        </FormControl>
+      </Box>
+      <Box>
+        <TextField fullWidth
+          label="URL"
+          helperText={i18n.proxyUrlHelpText}
+          disabled={!isUsingProxy}
+          value={settingsForm.proxy.hostname}
+          error={isInvalidProxyUrl && isUsingProxy}
+          onChange={e => {
+            setProxySettingsFormItem('hostname', e.target.value)
+          }}
+          onBlur={e => {
+            setIsInvalidProxyUrl(!/^(?!https?:\/\/|socks:\/\/)/.test(e.target.value))
+          }}
+        />
+      </Box>
+      <Box>
+        <TextField fullWidth
+          label={i18n.username}
+          helperText={i18n.proxyAuthHelpText}
+          disabled={!isUsingProxy}
+          value={settingsForm.proxy.username}
+          onChange={e => {
+            setProxySettingsFormItem('username', e.target.value)
+          }}
+        />
+      </Box>
+      <Box>
+        <TextField fullWidth
+          label={i18n.password}
+          helperText={i18n.proxyAuthHelpText}
+          disabled={!isUsingProxy}
+          value={settingsForm.proxy.password}
+          onChange={e => {
+            setProxySettingsFormItem('password', e.target.value)
+          }}
+        />
+      </Box>
     </div>
   )
 }

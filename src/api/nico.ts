@@ -58,7 +58,7 @@ const nicoApi = {
 
   getComments(videoInfo: any, options?: GetCommentsOptions) {
     const divider = (content: string) => ({ ping: { content } })
-    const userId = videoInfo.viewer.id.toString()
+    const userId: string | null = videoInfo.viewer?.id.toString()
     const userKey = videoInfo.comment.keys.userKey
     const maxMinutes = Math.ceil(videoInfo.video.duration / 60)
     const content = `0-${maxMinutes}:100,1000,nicoru:100`
@@ -67,7 +67,7 @@ const nicoApi = {
       language: 0,
       nicoru: 3,
       scores: 1,
-      user_id: userId,
+      ...(userId && { user_id: userId })
     }
 
     const dataItemWrapper = (name: string, number: number, data: any) => [

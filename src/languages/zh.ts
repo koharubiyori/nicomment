@@ -18,6 +18,9 @@ const zhLanguageMap = {
   hold: '把',   // 这个和do纯粹是为了日语...
   do: '做',
   close: '关闭',
+  port: '端口',
+  type: '类型',
+  username: '用户名',
 
   keywordSearch: '关键词搜索',
   locationOfSave: '保存位置',
@@ -33,6 +36,8 @@ const zhLanguageMap = {
   netErr: '网络错误',
   timeModify: '时间调整',
   danmakuPretreatment: '弹幕预处理',
+  proxySettings: '代理设置',
+  directConnect: '直连',
 
   selectLocationOfSave: '选择保存位置',
   emptyKeywordHintForSearch: '搜索关键词不能为空',
@@ -54,7 +59,8 @@ const zhLanguageMap = {
   hintForTimelineChartOfTimeModify: '注：为便于操作，上图仅表示相对比例。',
   hintForDanmakuTimeModificationDeleted: '已删除时间调整',
   hintForDanmakuTimeModificationMinimum: '调整后时长不能小于1秒',
-
+  proxyUrlHelpText: '开头不包含协议',
+  proxyAuthHelpText: '若无需凭证请勿填写',
 
   sequenceTypes: {
     commentMost: '弹幕最多',

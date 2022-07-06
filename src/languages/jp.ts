@@ -20,6 +20,9 @@ const jpLanguageMap: LanguageMap = {
   hold: 'を',
   do: 'する',
   close: '閉じる',
+  port: 'ポート',
+  username: 'ユーザー名',
+  type: 'タイプ',
 
   keywordSearch: 'キーワード検索',
   locationOfSave: '保存位置',
@@ -35,6 +38,8 @@ const jpLanguageMap: LanguageMap = {
   netErr: 'ネットエラー',
   timeModify: 'タイミング調整',
   danmakuPretreatment: 'コメント予処理',
+  proxySettings: 'プロキシ設定',
+  directConnect: 'ダイレクト',
 
   selectLocationOfSave: '保存位置を選択してください',
   emptyKeywordHintForSearch: '検索キーワードは空欄できません',
@@ -56,6 +61,8 @@ const jpLanguageMap: LanguageMap = {
   hintForTimelineChartOfTimeModify: '注：操作しやすいように，上の図は相対的な比例のみで表示します。',
   hintForDanmakuTimeModificationDeleted: 'タイミング調整を削除しました',
   hintForDanmakuTimeModificationMinimum: '調整した時間を1秒以下にすることができません',
+  proxyUrlHelpText: '最初にプロトコルを含まない',
+  proxyAuthHelpText: '認証が不要の場合は記入しないで',
 
   sequenceTypes: {
     commentMost: 'コメントが多い',

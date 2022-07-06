@@ -1,8 +1,10 @@
-import { notify } from './../utils/notify';
 import got, { Options, RequestError } from 'got'
 import { CookieJar } from 'tough-cookie'
-import logger from './logger'
+import settingsPrefs from '~/prefs/settingsPrefs'
 import { globalI18n } from '~/utils/i18n'
+import { notify } from './../utils/notify'
+import createProxyAgent from './createProxyAgent'
+import logger from './logger'
 
 const nicoCookieJar = new CookieJar()
 
@@ -27,7 +29,7 @@ export const nicoRequest = got.extend({
   },
 
   hooks: {
-    beforeRequest: [addHostToHeaders, logger.request],
+    beforeRequest: [addHostToHeaders, addProxyAgent, logger.request],
     afterResponse: [logger.response],
     beforeError: [errorHook]
   }
@@ -40,4 +42,19 @@ function errorHook(error: RequestError) {
 
 function addHostToHeaders(options: Options) {
   options.headers!['Host'] = (options.url as URL).hostname
+}
+
+function addProxyAgent(options: Options) {
+  if (settingsPrefs.proxy.type !== 'direct') {
+    const hostname = settingsPrefs.proxy.hostname.replace(/:\d+$/, '')
+    let port: any = settingsPrefs.proxy.hostname.match(/:(\d+)/)?.[1]
+    if (port !== undefined) port = parseInt(port)
+    if (isNaN(port)) port = undefined
+
+    options.agent = createProxyAgent({
+      ...settingsPrefs.proxy,
+      hostname,
+      port
+    })
+  }
 }
