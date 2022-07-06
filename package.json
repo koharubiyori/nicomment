@@ -1,6 +1,6 @@
 {
   "name": "nicomment",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "productName": "Nicomment",
   "description": "Electron application boilerplate based on React, React Router, Webpack, React Fast Refresh for rapid application development",
   "scripts": {
