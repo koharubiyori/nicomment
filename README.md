@@ -2,7 +2,7 @@
 
 Nicomment是一个用于下载N站弹幕的工具，使用Electron + MaterialUI + TypeScript开发。由于[NicomentXenoglossia](http://xeno.grrr.jp)的作者已不再维护，没有其他方便地获取N站弹幕的手段，故开发此程序。
 
-日本人ではので、もし不自然また間違い表現があったらご了承ください。日本語テキストを改善するPull Requestを歓迎します。
+日本人ではないので、もし不自然また間違い表現があったらご了承ください。日本語テキストを改善するPull Requestを歓迎します。
 
 Nicommentは[ニコニコ動画](http://www.nicovideo.jp)のコメントをダウンロードするツールです。Electron + MaterialUI + TypeScriptで開発しています。[NicomentXenoglossia](http://xeno.grrr.jp)の作者様がとっくにメンテナンスされていなくなりました。ほかの楽なニコ動のコメントを取る方法もないようで、このプログラムを開発したのです。
 
