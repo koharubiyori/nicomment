@@ -90,9 +90,9 @@ function DanmakuPreModal() {
 
     if (result.success) {
       notify.success(i18n.successHintOfDownloadComments(result.videoInfo!.video.title, result.fileContent!.commentTotal), ['top', 'right'])
-    } else if (result.type === 'failedDownloadFile') {
+    } else if (result.type === 'downloadFileFailed') {
       notify.error(i18n.failHintOfDownloadComments, ['top', 'right'])
-    } else if (result.type === 'failedSaveFile') {
+    } else if (result.type === 'saveFileFailed') {
       notify.error(i18n.failHintOfSaveComments, ['top', 'right'])
     }
   }

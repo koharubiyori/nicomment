@@ -18,6 +18,7 @@
       margin-left: 10px;
 
       .title {
+        width: 530px;
         font-size: 16px;
         font-weight: bold;
       }
@@ -35,8 +36,12 @@
         }
 
         .infoItem {
-          width: 12em;
+          width: 10em;
           margin-right: 20px;
+
+          &:last-child {
+            margin-right: 0;
+          }
         }
       }
     }

@@ -1,0 +1,27 @@
+.table {
+  th {
+    font-weight: bold;
+  }
+
+  th, td {
+    font-size: 14px;
+  }
+}
+
+.statusText {
+  &[data-status="downloading"] {
+    color: var(--info);
+    animation: twinkle 0.75s linear infinite alternate-reverse;
+    @keyframes twinkle {
+      to { opacity: 0; }
+    }
+  }
+
+  &[data-status="completed"] {
+    color: var(--success)
+  }
+
+  &[data-status="error"] {
+    color: var(--error)
+  }
+}

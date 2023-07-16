@@ -23,6 +23,9 @@ const jpLanguageMap: LanguageMap = {
   port: 'ポート',
   username: 'ユーザー名',
   type: 'タイプ',
+  thumbnail: 'サムネイル',
+  title: 'タイトル',
+  status: '状態',
 
   keywordSearch: 'キーワード検索',
   locationOfSave: '保存位置',
@@ -40,10 +43,11 @@ const jpLanguageMap: LanguageMap = {
   danmakuPretreatment: 'コメント予処理',
   proxySettings: 'プロキシ設定',
   directConnect: 'ダイレクト',
+  multipleDownload: 'バッチダウンロード',
 
   selectLocationOfSave: '保存位置を選択してください',
   emptyKeywordHintForSearch: '検索キーワードは空欄できません',
-  emptyLoginInfoHintForSearch: 'ログイン設定は空欄できません',
+  emptyLoginInfoHint: 'あらかじめログイン情報を記入してください',
   emptyCodeHintForSearch: 'sm/so IDは空欄できません',
   tryLoginHint: 'ログインをトライします...',
   loginSuccessHint: 'ログインしました',

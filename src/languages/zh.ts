@@ -2,6 +2,7 @@ const zhLanguageMap = {
   sequence: '排序',
   search: '搜素',
   download: '下载',
+  downloading: '下载中',
   settings: '设置',
   mail: '邮箱',
   password: '密码',
@@ -21,6 +22,12 @@ const zhLanguageMap = {
   port: '端口',
   type: '类型',
   username: '用户名',
+  thumbnail: '缩略图',
+  title: '标题',
+  status: '状态',
+  completed: '完成',
+  error: '错误',
+  result: '结果',
 
   keywordSearch: '关键词搜索',
   locationOfSave: '保存位置',
@@ -38,10 +45,12 @@ const zhLanguageMap = {
   danmakuPretreatment: '弹幕预处理',
   proxySettings: '代理设置',
   directConnect: '直连',
+  multipleDownload: '批量下载',
+  waitForDownload: '等待下载',
 
   selectLocationOfSave: '选择保存位置',
   emptyKeywordHintForSearch: '搜索关键词不能为空',
-  emptyLoginInfoHintForSearch: '登录信息不能为空',
+  emptyLoginInfoHint: '登录信息不能为空',
   emptyCodeHintForSearch: 'sm/so号不能为空',
   tryLoginHint: '尝试登录中...',
   loginSuccessHint: '登录成功',
@@ -61,6 +70,7 @@ const zhLanguageMap = {
   hintForDanmakuTimeModificationMinimum: '调整后时长不能小于1秒',
   proxyUrlHelpText: '开头不包含协议',
   proxyAuthHelpText: '若无需凭证请勿填写',
+  retryFailedDownload: '重试失败的下载',
 
   sequenceTypes: {
     commentMost: '弹幕最多',

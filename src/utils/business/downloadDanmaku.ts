@@ -14,19 +14,14 @@ export interface DownloadDanmakuOptions {
 
 export interface ResultOfDownloadDanmaku {
   success: boolean
-  type: 'done' | 'failedSaveFile' | 'failedDownloadFile'
+  type: 'done' | 'saveFileFailed' | 'downloadFileFailed'
   videoInfo?: Record<string, any>
   fileContent?: ReturnType<typeof nicoCommentResponseToXml>
   error?: any
 }
 
 export default async function downloadDanmaku(id: string, options: DownloadDanmakuOptions): Promise<ResultOfDownloadDanmaku> {
-  const i18n = globalI18n()
-
   try {
-    const displayTitle = options.title?.replace(/^([\s\S]{15})[\s\S]+$/, '$1...') ?? id
-    notify(i18n.startHintOfDownloadComments + displayTitle, ['top', 'right'])
-
     const videoInfo = await nicoApi.getVideoInfo(id)
     const comments = (await nicoApi.getComments(videoInfo)) as any[]
     const fileContent = nicoCommentResponseToXml(comments, options.processDanmakuData)
@@ -47,7 +42,7 @@ export default async function downloadDanmaku(id: string, options: DownloadDanma
       console.log(e)
       return {
         success: false,
-        type: 'failedSaveFile',
+        type: 'saveFileFailed',
         error: e
       }
     }
@@ -55,7 +50,7 @@ export default async function downloadDanmaku(id: string, options: DownloadDanma
     console.log(e)
     return {
       success: false,
-      type: 'failedDownloadFile',
+      type: 'downloadFileFailed',
       error: e
     }
   }

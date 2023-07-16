@@ -137,7 +137,7 @@ function SidePanel(props: Props) {
     }
 
     if (settingsForm.mail.trim().length === 0 || settingsForm.password.trim().length === 0) {
-      return notify.warning(i18n.emptyLoginInfoHintForSearch)
+      return notify.warning(i18n.emptyLoginInfoHint)
     }
 
     props.onCodeSearch(smOrSoCode)

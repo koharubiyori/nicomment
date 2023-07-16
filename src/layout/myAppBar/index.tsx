@@ -7,11 +7,8 @@ import React from 'react'
 import { ReactComponent as MaximizeIcon } from '~/assets/icons/maximize.svg'
 import { ReactComponent as ShrinkIcon } from '~/assets/icons/shrink.svg'
 import { windowIpcClient } from '~/ipcHub/modules/window'
-import { Settings as SettingsIcon } from '@material-ui/icons'
 import store from '~/store'
 import classes from './index.scss'
-import { useHistory } from 'react-router'
-import { showSettingsModal } from '~/components/business/danmakuPreModal'
 
 export const MyAppBarHeight = 44
 

@@ -1,4 +1,4 @@
-import { ButtonBase, MenuItem, MenuList, Paper, Popover, PopoverPosition } from '@material-ui/core'
+import { ButtonBase, MenuItem, MenuList, Paper, Popover, PopoverPosition, Checkbox } from '@material-ui/core'
 import clsx from 'clsx'
 import React, { MouseEvent, useRef, useState } from 'react'
 import { useI18n } from '~/utils/i18n'
@@ -15,8 +15,11 @@ export interface Props {
   duration: string
   publishTime: string
   tags: string[]
+  checked: boolean
+  multipleSelect: boolean
   onClick(): void
   onActionClick: (action: VideoItemAction) => void
+  onMultipleSelectActivate(): void
 }
 
 export type VideoItemAction = 'showDanmakuPreModal' | 'gotoVideoContent'
@@ -27,10 +30,20 @@ function VideoItem(props: Props) {
   const [menuPosition, setMenuPosition] = useState<PopoverPosition>({ left: 0, top: 0 })
   const containerRef = useRef<any>()
 
-  function handleOnMouseRightClick(e: MouseEvent) {
-    if (e.button !== 2) { return }
-    setIsOpen(true)
-    setMenuPosition({ left: e.clientX, top: e.clientY })
+  function handleOnClick(e: MouseEvent) {
+    if (e.ctrlKey || props.multipleSelect) {
+      props.onMultipleSelectActivate()
+      return
+    }
+
+    props.onClick()
+  }
+
+  function handleOnMousedown(e: MouseEvent) {
+    if (e.button === 2) {
+      setIsOpen(true)
+      setMenuPosition({ left: e.clientX, top: e.clientY })
+    }
   }
 
   function triggerAction(action: VideoItemAction) {
@@ -42,8 +55,8 @@ function VideoItem(props: Props) {
     <div className={clsx(classes.container, 'flex-row')} ref={containerRef}>
       <ButtonBase
         style={{ width: '100%', textAlign: 'left' }}
-        onClick={props.onClick}
-        onMouseDown={handleOnMouseRightClick}
+        onClick={handleOnClick}
+        onMouseDown={handleOnMousedown}
       >
         <img src={props.thumbnailUrl} referrerPolicy="no-referrer" className="thumbnailImg" />
         <div className="flex-limit info">
@@ -56,12 +69,15 @@ function VideoItem(props: Props) {
           <div className="flex-row infoRow">
             <div className="infoItem">{i18n.durationForVideoItem}：{props.duration}</div>
             <div className="infoItem">{i18n.commentCounts}：{props.commentCount}</div>
-            <div className="infoItem" style={{ width: '18em' }}>{i18n.publishDate}：{props.publishTime}</div>
+            <div className="infoItem" style={{ width: '17em' }}>{i18n.publishDate}：{props.publishTime}</div>
           </div>
-          {/* <div className="flex-row">
-
-          </div> */}
         </div>
+        {props.multipleSelect &&
+          <Checkbox
+            color="primary"
+            checked={props.checked}
+          />
+        }
       </ButtonBase>
       <Popover
         open={isOpen}

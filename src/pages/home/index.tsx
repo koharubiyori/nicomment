@@ -1,12 +1,11 @@
-import { CircularProgress } from '@material-ui/core'
+import { CircularProgress, Fab, Zoom } from '@material-ui/core'
 import clsx from 'clsx'
 import moment from 'moment'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { throttle } from 'throttle-debounce'
 import nicoApi from '~/api/nico'
 import { ReactComponent as NoDataIcon } from '~/assets/icons/nodata.svg'
-import showDanmakuPreModal from '~/components/business/danmakuPreModal'
 import useStateWithRef from '~/hooks/useStateWithRef'
 import settingsPrefs from '~/prefs/settingsPrefs'
 import execDownloadDanmaku from '~/utils/business/downloadDanmaku'
@@ -15,6 +14,11 @@ import { notify } from '~/utils/notify'
 import SidePanel, { DurationType, SearchFormValues, SequenceType, SettingsFormValues, ViewCountType } from './components/sidePanel'
 import VideoItem, { VideoItemAction } from './components/videoItem'
 import classes from './index.scss'
+import CloseIcon from '@material-ui/icons/Close';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import showDanmakuPreModal from './components/danmakuPreModal'
+import MultipleSelectDialog, { MultipleSelectDialogRef } from './components/multipleDownloadDialog'
+import CssVariablesOfTheme from '~/components/cssVariablesOfTheme'
 
 interface SearchConfig {
   search?: SearchFormValues
@@ -23,11 +27,11 @@ interface SearchConfig {
 
 function HomePage() {
   const i18n = useI18n()
-  const [videoList, setVideoList, videoListRef] = useStateWithRef([])
+  const [videoList, setVideoList, videoListRef] = useStateWithRef<any[]>([])
   const [videoListStatus, setVideoListStatus, videoListStatusRef] = useStateWithRef<LoadStatus>(1)
 
-  // const [isMultipleSelect, setIsMultipleSelect] = useState(false)
-  // const [selectedVideoIds, setSelectedVideoIds] = useState<string[]>([])
+  const [isMultipleSelect, setIsMultipleSelect] = useState(false)
+  const [selectedVideoIds, setSelectedVideoIds] = useState<string[]>([])
 
   const loginFlagRef = useRef(false)
   const searchConfigRef = useRef<SearchConfig>({
@@ -35,6 +39,7 @@ function HomePage() {
     settings: settingsPrefs
   })
   const videoListElRef = useRef<HTMLDivElement>()
+  const multipleDownloadDialogRef = useRef<MultipleSelectDialogRef>()
 
   useEffect(() => {
     const throttledSearch = throttle(1000, () => search(undefined, true))
@@ -48,6 +53,10 @@ function HomePage() {
     videoListElRef.current!.addEventListener('scroll', handler)
     return () => videoListElRef.current?.removeEventListener('scroll', handler)
   }, [])
+
+  useEffect(() => {
+    selectedVideoIds.length === 0 && setIsMultipleSelect(false)
+  }, [selectedVideoIds])
 
   function login(mail: string, password: string) {
     notify(i18n.tryLoginHint)
@@ -156,7 +165,7 @@ function HomePage() {
 
   async function downloadDanmaku(id: string, title?: string) {
     if (!searchConfigRef.current.settings?.mail || !searchConfigRef.current.settings.password) {
-      return notify(i18n.emptyLoginInfoHintForSearch)
+      return notify(i18n.emptyLoginInfoHint)
     }
 
     try {
@@ -165,6 +174,9 @@ function HomePage() {
         searchConfigRef.current.settings!.password
       )
 
+      const displayTitle = title?.replace(/^([\s\S]{15})[\s\S]+$/, '$1...') ?? id
+      notify(i18n.startHintOfDownloadComments + displayTitle, ['top', 'right'])
+
       const result = await execDownloadDanmaku(id, {
         title,
         savePath: searchConfigRef.current.settings!.pathOfSave
@@ -172,9 +184,9 @@ function HomePage() {
 
       if (result.success) {
         notify.success(i18n.successHintOfDownloadComments(result.videoInfo!.video.title, result.fileContent!.commentTotal), ['top', 'right'])
-      } else if (result.type === 'failedDownloadFile') {
+      } else if (result.type === 'downloadFileFailed') {
         notify.error(i18n.failHintOfDownloadComments, ['top', 'right'])
-      } else if (result.type === 'failedSaveFile') {
+      } else if (result.type === 'saveFileFailed') {
         notify.error(i18n.failHintOfSaveComments, ['top', 'right'])
       }
     } catch(e) {
@@ -183,10 +195,18 @@ function HomePage() {
     }
   }
 
+  function toggleItemSelect(videoId: string) {
+    setSelectedVideoIds(prevVal => {
+      return prevVal.includes(videoId) ?
+        prevVal.filter(item => item !== videoId) :
+        Array.from(new Set(prevVal.concat([videoId])))
+    })
+  }
+
   async function handleOnVideoItemClick(action: VideoItemAction, itemData: any) {
     if (action === 'showDanmakuPreModal') {
       if (!searchConfigRef.current.settings?.mail || !searchConfigRef.current.settings.password) {
-        return notify(i18n.emptyLoginInfoHintForSearch)
+        return notify(i18n.emptyLoginInfoHint)
       }
 
       try {
@@ -203,12 +223,28 @@ function HomePage() {
         danmakuData: itemData,
         savePath: searchConfigRef.current.settings!.pathOfSave
       })
-      // setIsMultipleSelect(true)
-      // setSelectedVideoIds(prevVal => prevVal.concat([itemData.contentId]))
     }
     if (action === 'gotoVideoContent') {
       window.open('https://nico.ms/' + itemData.contentId)
     }
+  }
+
+  function executeMultipleDownload() {
+    if (!searchConfigRef.current.settings?.mail || !searchConfigRef.current.settings.password) {
+      return notify(i18n.emptyLoginInfoHint)
+    }
+
+    multipleDownloadDialogRef.current?.show({
+      videoList: selectedVideoIds.map(id => {
+        const foundVideoItem = videoList.find(videoItem => videoItem.contentId === id)
+        return {
+          id,
+          title: foundVideoItem.title,
+          thumbnail: foundVideoItem.thumbnailUrl
+        }
+      }),
+      pathOfSave: searchConfigRef.current.settings!.pathOfSave
+    })
   }
 
   function formatDuration(seconds: number) {
@@ -229,59 +265,78 @@ function HomePage() {
         onSettingsChange={settings => searchConfigRef.current.settings = settings}
         onCodeSearch={code => downloadDanmaku(code, code)}
       />
-      <div className="videList flex flex-column-limit" ref={videoListElRef as any}>
-        {videoListStatus === 1 &&
-          <div className="noData flex flex-column flex-center">
-            <NoDataIcon style={{ width: 200, height: 200, fill: '#ccc' }} />
-            <div className="hintText">{i18n.doSearchPlease}</div>
-          </div>
-        }
+      <div className="videoListContainer flex flex-column-limit">
+        <div className="videoList" ref={videoListElRef as any}>
+          {videoListStatus === 1 &&
+            <div className="noData flex flex-column flex-center">
+              <NoDataIcon style={{ width: 200, height: 200, fill: '#ccc' }} />
+              <div className="hintText">{i18n.doSearchPlease}</div>
+            </div>
+          }
 
-        {videoListStatus === 2.1 &&
-          new Array(20).fill(0).map((_, index) =>
-            <Skeleton key={index} height={100} style={{ marginBottom: 10 }} />
-          )
-        }
+          {videoListStatus === 2.1 &&
+            new Array(20).fill(0).map((_, index) =>
+              <Skeleton key={index} height={100} style={{ marginBottom: 10 }} />
+            )
+          }
 
-        {videoList.map((item: any) =>
-          <div key={item.contentId} className="flex-row flex-cross-center">
-            {/* {isMultipleSelect &&
-              <Checkbox
+          {videoList.map((item: any) =>
+            <div key={item.contentId} className="flex-row flex-cross-center">
+              <VideoItem
+                title={item.title}
+                description={item.description}
+                duration={formatDuration(item.lengthSeconds)}
+                thumbnailUrl={item.thumbnailUrl}
+                likeCount={item.likeCounter}
+                commentCount={item.commentCounter}
+                viewCount={item.viewCounter}
+                mylistCount={item.mylistCounter}
+                publishTime={moment(item.startTime).format(i18n.basicDateFormatForMoment)}
+                tags={item.tags.split(' ')}
                 checked={selectedVideoIds.includes(item.contentId)}
-                color="primary"
-                style={{ margin: 20 }}
-                onChange={(e) => setSelectedVideoIds(prevVal => e.target.checked
-                  ? prevVal.concat([item.contentId])
-                  : prevVal.filter(videoId => videoId !== item.contentId)
-                )}
+                multipleSelect={isMultipleSelect}
+                onClick={() => {
+                  isMultipleSelect ?
+                    toggleItemSelect(item.contentId) :
+                    downloadDanmaku(item.contentId, item.title)
+                }}
+                onActionClick={(action) => handleOnVideoItemClick(action, item)}
+                onMultipleSelectActivate={() => {
+                  setIsMultipleSelect(true)
+                  toggleItemSelect(item.contentId)
+                }}
               />
-            } */}
-            <VideoItem
-              title={item.title}
-              description={item.description}
-              duration={formatDuration(item.lengthSeconds)}
-              thumbnailUrl={item.thumbnailUrl}
-              likeCount={item.likeCounter}
-              commentCount={item.commentCounter}
-              viewCount={item.viewCounter}
-              mylistCount={item.mylistCounter}
-              publishTime={moment(item.startTime).format(i18n.basicDateFormatForMoment)}
-              tags={item.tags.split(' ')}
-              onClick={() => downloadDanmaku(item.contentId, item.title)}
-              onActionClick={(action) => handleOnVideoItemClick(action, item)}
-            />
-          </div>
-        )}
+            </div>
+          )}
 
-        {videoListStatus === 2 &&
-          <div className="flex-row flex-center" style={{ height: 50 }}>
-            <CircularProgress />
-          </div>
-        }
-        {videoListStatus === 4 &&
-          <div className="allLoaded">{i18n.allLoadedHintOfSearchResult}</div>
-        }
+          <Zoom in={isMultipleSelect}>
+            <div className="fabContainer" style={{ right: 130 }}>
+              <Fab color="primary" size="small" onClick={executeMultipleDownload}>
+                <GetAppIcon />
+              </Fab>
+            </div>
+          </Zoom>
+
+          <Zoom in={isMultipleSelect}>
+            <div className="fabContainer" style={{ right: 80 }}>
+              <Fab className="fab" color="secondary" size="small" onClick={() => setSelectedVideoIds([])}>
+                <CloseIcon />
+              </Fab>
+            </div>
+          </Zoom>
+
+          {videoListStatus === 2 &&
+            <div className="flex-row flex-center" style={{ height: 50 }}>
+              <CircularProgress />
+            </div>
+          }
+          {videoListStatus === 4 &&
+            <div className="allLoaded">{i18n.allLoadedHintOfSearchResult}</div>
+          }
+        </div>
       </div>
+
+      <MultipleSelectDialog getRef={multipleDownloadDialogRef} />
     </div>
   )
 }
