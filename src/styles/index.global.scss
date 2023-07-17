@@ -18,12 +18,21 @@ html, body {
   }
 }
 
-.MuiButton-containedPrimary:not(foo) {
-  &:hover {
-    background-color: map-get($map: $colors, $key: 'light');
-  }
-}
-
 .snackWarning:not(foo) {
   background-color: #f77e26;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #ccc;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  position: absolute;
 }
