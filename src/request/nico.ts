@@ -13,19 +13,21 @@ export const nicoRequest = got.extend({
   timeout: 7_000,
   headers: {
     'Accept': '*/*',
-    'Accept-Language': 'ja',
-    'Cache-Control': 'no-cache',
     'Connection': 'keep-alive',
     'DNT': '1',
-    'Pragma': 'no-cache',
-    'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="92"',
-    'sec-ch-ua-mobile': '?0',
+    // 'Host': 'nv-comment.nicovideo.jp',
+    'Origin': 'https://www.nicovideo.jp',
+    'Referer': 'https://www.nicovideo.jp/',
     'Sec-Fetch-Dest': 'empty',
     'Sec-Fetch-Mode': 'cors',
     'Sec-Fetch-Site': 'same-site',
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Safari/537.36',
-    'Origin': 'https://www.nicovideo.jp',
-    'Referer': 'https://www.nicovideo.jp/'
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'sec-ch-ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+    'x-client-os-type': 'others',
+    'x-frontend-id': '6',
+    'x-frontend-version': '0',
   },
 
   hooks: {
@@ -41,7 +43,7 @@ function errorHook(error: RequestError) {
 }
 
 function addHostToHeaders(options: Options) {
-  options.headers!['Host'] = (options.url as URL).hostname
+  options.headers!['Host'] = (options.url as unknown as URL).hostname
 }
 
 function addProxyAgent(options: Options) {

@@ -5,7 +5,7 @@ import Promiser from '~/utils/promiser'
 type UnRegisterRootChild = () => void
 
 export interface RootParentClient {
-  registerRootChild(content: JSX.Element): UnRegisterRootChild
+  registerRootChild(contentRender: () => JSX.Element): UnRegisterRootChild
 }
 
 let _rootParentClient: RootParentClient = null!
@@ -22,7 +22,8 @@ function useChildrenRegister() {
   const [registeredChildren, setRegisteredChildren] = useState<JSX.Element[]>([])
 
   const rootParentClient: RootParentClient & { setChildren: React.Dispatch<React.SetStateAction<JSX.Element[]>> } = {
-    registerRootChild: (content) => {
+    registerRootChild: (contentRender) => {
+      const content = contentRender()
       setRegisteredChildren(prevVal => prevVal.concat([content]))
       return () => setRegisteredChildren(prevVal => prevVal.filter(item => item !== content))
     },

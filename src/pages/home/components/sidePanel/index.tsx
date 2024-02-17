@@ -108,7 +108,7 @@ function SidePanel(props: Props) {
   }
 
   async function showDirSelectDialog() {
-    const result = await dialogIpcClient.showDirSelectDialog({
+    const result = await dialogIpcClient.showFilesSelectDialog({
       title: i18n.selectLocationOfSave,
       properties: ['openDirectory']
     })
@@ -143,7 +143,7 @@ function SidePanel(props: Props) {
     props.onCodeSearch(smOrSoCode)
   }
 
-  function handleOnDeleteIconOfSearchRecordClick(e: MouseEvent, recordName: string) {
+  function handleOnDeletingIconOfSearchRecordClick(e: MouseEvent, recordName: string) {
     e.stopPropagation()
     setSearchHistory(prevVal => {
       const newVal = prevVal.filter(item => item !== recordName)
@@ -177,7 +177,7 @@ function SidePanel(props: Props) {
           renderOption={(recordName, state) =>
             <div className="flex-row flex-between">
               <div>{recordName}</div>
-              <Close fontSize="small" style={{ fill: '#757575' }} onClick={(e) => handleOnDeleteIconOfSearchRecordClick(e, recordName)} />
+              <Close fontSize="small" style={{ fill: '#757575' }} onClick={(e) => handleOnDeletingIconOfSearchRecordClick(e, recordName)} />
             </div>
           }
           renderInput={(params) =>

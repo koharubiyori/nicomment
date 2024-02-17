@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import { useState } from 'react'
 import languages from '~/languages'
 
-const i18nContext = createContext<SupportedLanguages>(undefined as any)
+const i18nContext = createContext<SupportedLanguages>('zh')
 
 export type SupportedLanguages = 'zh' | 'jp'
 

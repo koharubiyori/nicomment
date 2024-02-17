@@ -4,6 +4,7 @@ const jpLanguageMap: LanguageMap = {
   sequence: '順序',
   search: '検索',
   download: 'ダウンロード',
+  downloading: 'ダウンロード中',
   settings: '設定',
   mail: 'メールアドレス',
   password: 'パスワード',
@@ -26,6 +27,9 @@ const jpLanguageMap: LanguageMap = {
   thumbnail: 'サムネイル',
   title: 'タイトル',
   status: '状態',
+  completed: '完成',
+  error: 'エラー',
+  result: '结果',
 
   keywordSearch: 'キーワード検索',
   locationOfSave: '保存位置',
@@ -44,6 +48,7 @@ const jpLanguageMap: LanguageMap = {
   proxySettings: 'プロキシ設定',
   directConnect: 'ダイレクト',
   multipleDownload: 'バッチダウンロード',
+  waitForDownload: 'ダウンロードします',
 
   selectLocationOfSave: '保存位置を選択してください',
   emptyKeywordHintForSearch: '検索キーワードは空欄できません',
@@ -62,11 +67,12 @@ const jpLanguageMap: LanguageMap = {
   noRecordOfSearchHistory: '検索履歴がありません',
   insertZeroSecondHint: '0秒を挿入ことができません',
   timeRangeConflictHint: '追加する時間帯と追加済みの時間帯が重なります',
-  hintForTimelineChartOfTimeModify: '注：操作しやすいように，上の図は相対的な比例のみで表示します。',
+  hintForTimelineChartOfTimeModify: '注：操作しやすいように，上の図は相対的な比例で表示されています。',
   hintForDanmakuTimeModificationDeleted: 'タイミング調整を削除しました',
   hintForDanmakuTimeModificationMinimum: '調整した時間を1秒以下にすることができません',
   proxyUrlHelpText: '最初にプロトコルを含まない',
   proxyAuthHelpText: '認証不要の場合は記入しないで',
+  retryFailedDownload: '失敗したダウンロードをリトライします',
 
   sequenceTypes: {
     commentMost: 'コメントが多い',

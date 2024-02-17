@@ -1,5 +1,5 @@
-import { SnackbarProvider, SnackbarProviderProps } from 'notistack'
-import React, { useLayoutEffect, useRef } from 'react'
+import { OptionsObject, SnackbarKey, SnackbarProvider, SnackbarProviderProps, closeSnackbar, enqueueSnackbar } from 'notistack'
+import React, { ReactNode, useLayoutEffect, useRef } from 'react'
 
 export type NotifyType = 'default' | 'info' | 'success' | 'warning' | 'error'
 export type NotifyPositions = ['top' | 'bottom', 'left' | 'center' | 'right']
@@ -43,8 +43,16 @@ export function NotifyProvider(props: NotifyProviderProps) {
   return (
     <SnackbarProvider
       {...props}
-      classes={{ variantWarning: 'snackWarning' }}
       ref={snackbarRef}
     />
   )
+}
+
+export function createTextUpdatableNotify(message: ReactNode, options?: OptionsObject<'default' | 'error' | 'success' | 'warning' | 'info'> | undefined) {
+  const textRef = React.createRef<HTMLSpanElement>()
+  const key = enqueueSnackbar(<span ref={textRef}>{message}</span>, { ...options, persist: true })
+  return {
+    updateText: (content: string) => textRef.current!.textContent = content,
+    close: () => closeSnackbar(key)
+  }
 }

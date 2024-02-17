@@ -1,15 +1,13 @@
 import path from 'path'
 import fs from 'fs'
 import nicoApi from '~/api/nico'
-import { globalI18n } from '../i18n'
-import { notify } from '../notify'
-import nicoCommentResponseToXml from './nicoCommentResponseToXml'
+import nicoCommentResponseToXml, { NicoCommentResponseToXmlOptions } from './nicoCommentResponseToXml'
 import escapeWindowsFileName from '~/utils/escapeWindowsFileName'
 
 export interface DownloadDanmakuOptions {
   savePath: string
   title?: string
-  processDanmakuData?: Parameters<typeof nicoCommentResponseToXml>[1]
+  toXmlOptions?: NicoCommentResponseToXmlOptions
 }
 
 export interface ResultOfDownloadDanmaku {
@@ -23,8 +21,8 @@ export interface ResultOfDownloadDanmaku {
 export default async function downloadDanmaku(id: string, options: DownloadDanmakuOptions): Promise<ResultOfDownloadDanmaku> {
   try {
     const videoInfo = await nicoApi.getVideoInfo(id)
-    const comments = (await nicoApi.getComments(videoInfo)) as any[]
-    const fileContent = nicoCommentResponseToXml(comments, options.processDanmakuData)
+    const comments = (await nicoApi.getComments(videoInfo)) as any
+    const fileContent = nicoCommentResponseToXml(comments, options.toXmlOptions)
     const fileDir = options.savePath
     const filePath = path.join(fileDir, escapeWindowsFileName(videoInfo.video.title) + '.xml')
 

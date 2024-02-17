@@ -16,9 +16,8 @@ import VideoItem, { VideoItemAction } from './components/videoItem'
 import classes from './index.scss'
 import CloseIcon from '@material-ui/icons/Close';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import showDanmakuPreModal from './components/danmakuPreModal'
+import showDanmakuPreModal from '~/pages/danmakuPreModal'
 import MultipleSelectDialog, { MultipleSelectDialogRef } from './components/multipleDownloadDialog'
-import CssVariablesOfTheme from '~/components/cssVariablesOfTheme'
 
 interface SearchConfig {
   search?: SearchFormValues

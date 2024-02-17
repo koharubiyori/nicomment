@@ -1,0 +1,96 @@
+.title {
+  font-size: 17px;
+  margin: 10px 0;
+  border-left: 5px var(--primary) solid;
+  padding-left: 10px;
+}
+
+.timeline {
+  width: 90%;
+  height: 5px;
+  margin: 0 auto;
+  display: flex;
+  position: relative;
+
+  :global {
+    .beginPoint, .endPoint {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      border: 4px rgb(101, 116, 196) solid;   // 这个electron的版本不支持color-mix(in srgb, var(--primary) 80%, transparent)，只能这样了
+
+      &.endPoint {
+        left: initial;
+        right: 0;
+        transform: translate(50%, -50%);
+      }
+    }
+
+    .beginTime, .endTime {
+      position: absolute;
+      left: 0;
+      top: 30px;
+      transform: translateX(-50%);
+
+      &.endTime {
+        left: initial;
+        right: 0;
+        transform: translateX(50%);
+      }
+    }
+
+    .fragment {
+      height: 100%;
+      background-color: rgb(101, 116, 196);
+      box-sizing: border-box;
+      border-left: 2px white solid;
+      border-right: 2px white solid;
+      min-width: 10px;
+
+      @mixin clickable() {
+        min-width: 30px;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+
+      &[data-type="normal"] {
+        border: none;
+      }
+
+      &[data-type="add"] {
+        background-color: #5AF158;
+        @include clickable();
+      }
+
+      &[data-type="delete"] {
+        background-color: #FF6E40;
+        @include clickable();
+      }
+
+      &[data-type="transparent"] {
+        background-color: transparent;
+        border: none;
+      }
+
+      &[data-type="shadow"] {
+        background-color: transparent;
+        border: none;
+        min-width: 30px;
+      }
+    }
+  }
+}
+
+:global {
+  .MuiTooltip-tooltip:not(foo) {
+    font-size: 12px;
+  }
+}

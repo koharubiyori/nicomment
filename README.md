@@ -1,13 +1,13 @@
 # Nicomment
 
-[**中文简体**](./README.md) | [**日本语**](./README_Ja.md)
+[**中文简体**](./README.md) | [**日本語**](./README_Ja.md)
 
 Nicomment是一个用于下载N站弹幕的工具，使用Electron + MaterialUI + TypeScript开发。由于[NicomentXenoglossia](http://xeno.grrr.jp)的作者已不再维护，没有其他较为方便地获取N站弹幕的手段，故开发此程序。
 
 ## 使用方法
 
 使用该工具下载弹幕后，将以xml格式与保存在指定的位置。之后可以通过[danmaku2ass](https://github.com/m13253/danmaku2ass)等工具转换为ass字幕文件后，在播放器中载入这个ass字幕文件就可以看到弹幕了，
-播放器windows上推荐使用(MPC-HC)[https://mpc-hc.org]（我只用过这个...），Android上推荐MX Player和X Player，这两个是我在试了很多播放器之后得出的结果，对于ass字幕的变形以及位移等功能支持的都比较好，性能也还不错。如果你使用的播放器载入字幕后无法正常显示，不妨试试这几个。
+播放器windows上推荐使用[MPC-HC](https://mpc-hc.org)（因为我只用过这个...），Android上推荐MX Player和X Player，这两个是我在试了很多播放器之后得出的结果，对于ass字幕的变形以及位移等功能支持的都比较好，性能也还不错。如果你使用的播放器载入字幕后无法正常显示，不妨试试这几个。
 
 另外还需要一些设置来优化弹幕显示：
 * MX Player

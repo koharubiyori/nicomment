@@ -39,6 +39,7 @@ src/renderer.prod.js.map
 src/style.css
 src/style.css.map
 src/comments
+src/ass
 dist
 dll
 main.js
@@ -50,3 +51,4 @@ npm-debug.log.*
 *.sass.d.ts
 *.scss.d.ts
 .history
+.yarn
