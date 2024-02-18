@@ -125,7 +125,7 @@ function SidePanel(props: Props) {
     props.onSearch(searchForm)
 
     setSearchHistory(prevVal => {
-      const newVal = Array.from(new Set(prevVal.concat([searchForm.keyword])))
+      const newVal = Array.from(new Set([searchForm.keyword, ...prevVal]))
       if (newVal.length > 6) newVal.pop()
       return newVal
     })
@@ -143,7 +143,7 @@ function SidePanel(props: Props) {
     props.onCodeSearch(smOrSoCode)
   }
 
-  function handleOnDeletingIconOfSearchRecordClick(e: MouseEvent, recordName: string) {
+  function handleOnClickDeleteIconOfSearchRecord(e: MouseEvent, recordName: string) {
     e.stopPropagation()
     setSearchHistory(prevVal => {
       const newVal = prevVal.filter(item => item !== recordName)
@@ -177,7 +177,7 @@ function SidePanel(props: Props) {
           renderOption={(recordName, state) =>
             <div className="flex-row flex-between">
               <div>{recordName}</div>
-              <Close fontSize="small" style={{ fill: '#757575' }} onClick={(e) => handleOnDeletingIconOfSearchRecordClick(e, recordName)} />
+              <Close fontSize="small" style={{ fill: '#757575' }} onClick={(e) => handleOnClickDeleteIconOfSearchRecord(e, recordName)} />
             </div>
           }
           renderInput={(params) =>
