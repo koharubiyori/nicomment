@@ -3,13 +3,23 @@ import React, { ReactNode, useLayoutEffect, useRef } from 'react'
 
 export type NotifyType = 'default' | 'info' | 'success' | 'warning' | 'error'
 export type NotifyPositions = ['top' | 'bottom', 'left' | 'center' | 'right']
+export type NotifyOptions = OptionsObject<'default' | 'error' | 'success' | 'warning' | 'info'>
 
 export interface Notify {
   (message: string, position?: NotifyPositions): void
+  (message: string, options?: NotifyOptions): void
+
   success (message: string, position?: NotifyPositions): void
+  success (message: string, options?: NotifyOptions): void
+
   info (message: string, position?: NotifyPositions): void
+  info (message: string, options?: NotifyOptions): void
+
   warning (message: string, position?: NotifyPositions): void
+  warning (message: string, options?: NotifyOptions): void
+
   error (message: string, position?: NotifyPositions): void
+  error (message: string, options?: NotifyOptions): void
 }
 
 export let notify: Notify = null!
@@ -24,12 +34,25 @@ export function NotifyProvider(props: NotifyProviderProps) {
 
     const createOptions = (
       type: NotifyType = 'default',
-      position: NotifyPositions = ['top', 'center']
-    ) => ({
-      variant: type,
-      anchorOrigin: { vertical: position[0], horizontal: position[1] },
-      autoHideDuration: 3000
-    })
+      positionOrOptions: NotifyPositions = ['top', 'center'],
+      autoHideDuration = 3000
+    ) => {
+      const defaultOptions = {
+        variant: type,
+        anchorOrigin: { vertical: positionOrOptions[0], horizontal: positionOrOptions[1] },
+        autoHideDuration
+      }
+
+      if (Array.isArray(positionOrOptions)) {
+        return defaultOptions
+      } else {
+        return {
+          ...defaultOptions,
+          anchorOrigin: { vertical: 'top', horizontal: 'center' },
+          ...(positionOrOptions as any)
+        }
+      }
+    }
 
     let notifyClient: any = (message: any, position?: any) => msg(message, createOptions('default', position))
     notifyClient.info = (message: any, position?: any) => msg(message, createOptions('info', position))

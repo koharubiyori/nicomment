@@ -88,6 +88,7 @@ function VideoItem(props: Props) {
       >
         <Paper>
           <MenuList>
+            <MenuItem onClick={() => { props.onMultipleSelectActivate(); setIsOpen(false) }}>{i18n.multipleSelect}({i18n.helpTextForMultipleSelect})</MenuItem>
             <MenuItem onClick={() => triggerAction('showDanmakuPreModal')}>{i18n.danmakuPretreatment}</MenuItem>
             <MenuItem onClick={() => triggerAction('gotoVideoContent')}>{i18n.gotoVideoPage}</MenuItem>
           </MenuList>

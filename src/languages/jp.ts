@@ -49,7 +49,7 @@ const jpLanguageMap: LanguageMap = {
   danmakuPretreatment: 'コメント予処理',
   proxySettings: 'プロキシ設定',
   directConnect: 'ダイレクト',
-  multipleDownload: 'バッチダウンロード',
+  multipleDownload: '複数ダウンロード',
   waitForDownload: 'ダウンロード待機中',
   niconicoDanmakuFile: 'niconicoコメントファイル',
   startToConvert: '変換を開始します',
@@ -70,6 +70,7 @@ const jpLanguageMap: LanguageMap = {
   splitByHelfComma: '半角コンマで区切り',
   filterByRegex: '正規表現で除外',
   splitByLineBreak: '改行で区切り',
+  multipleSelect: '複数選択',
 
   selectLocationOfSave: '保存位置を選択してください',
   emptyKeywordHintForSearch: '検索キーワードは空欄できません',
@@ -105,6 +106,7 @@ const jpLanguageMap: LanguageMap = {
   clickHereToSelectFiles: 'クリックしてファイルを選択',
   clickHereToSelectDir: 'クリックしてフォルダを選択',
   helpTextForNgScore: '空欄また0の時は除外しません',
+  helpTextForMultipleSelect: 'Ctrl + 左クリック',
 
   sequenceTypes: {
     commentMost: 'コメントが多い',

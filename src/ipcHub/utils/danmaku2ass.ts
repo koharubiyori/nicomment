@@ -27,9 +27,9 @@ export default function danmaku2ass(inputPath: string, outputPath: string, optio
     safety(inputPath)
   ]
 
-  return new Promise<void>((resolve) => {
+  return new Promise<void>((resolve, reject) => {
     childProcess.exec(`libs\\danmaku2ass.exe ${params.join(' ')}`, err => {
-      if (err !== null) throw err
+      if (err !== null) return reject(err)
       resolve()
     })
   })

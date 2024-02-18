@@ -70,6 +70,7 @@ const zhLanguageMap = {
   splitByHelfComma: '以半角逗号分隔',
   filterByRegex: '正则表达式过滤',
   splitByLineBreak: '以换行分隔',
+  multipleSelect: '多选',
 
 
   // 短句，一般只会用在一个地方，变量名不一定和内容一一对应
@@ -106,6 +107,7 @@ const zhLanguageMap = {
   clickHereToSelectFiles: '点击此处选择文件',
   clickHereToSelectDir: '点击此处选择文件夹',
   helpTextForNgScore: '为空或0时不过滤',
+  helpTextForMultipleSelect: 'Ctrl + 左键单击',
 
   sequenceTypes: {
     commentMost: '弹幕最多',

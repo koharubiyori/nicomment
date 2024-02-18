@@ -101,13 +101,15 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
 
       setIsConverting(false)
       convertNotify.close()
-      notify.success(i18n.hintForConvertCompleted(succeedCount, failedCount))
+      notify[failedCount === 0 ? 'success' : 'warning'](i18n.hintForConvertCompleted(succeedCount, failedCount), {
+        autoHideDuration: 5000
+      })
 
       if (failedCount !== 0) {
         const appPath = await appIpcClient.call('getAppPath')
         const logFilePath = path.join(appPath, 'output.log')
         await fsPromise.writeFile(logFilePath, log, 'utf8')
-        notify.error(i18n.hintForSavePathOfLogOfFailedConvert)
+        notify.error(i18n.hintForSavePathOfLogOfFailedConvert, { autoHideDuration: 5000 })
       }
     } else {
       if (checkingResult.reason === 'hasEmptyItemInAssGeneration') notify.warning('')
