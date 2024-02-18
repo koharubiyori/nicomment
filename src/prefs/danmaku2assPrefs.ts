@@ -8,8 +8,8 @@ export interface Danmaku2assConfig extends Danmaku2assOptions {
 }
 
 export const defaultDanmaku2assConfig: Danmaku2assConfig = {
-  screenWidth: 1920,
-  screenHeight: 1080,
+  videoWidth: 1920,
+  videoHeight: 1080,
   outputPath: '',
   danmakuFont: 'MS PGothic',
   danmakuFontSize: 72,

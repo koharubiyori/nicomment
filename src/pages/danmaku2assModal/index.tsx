@@ -54,20 +54,20 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
   async function showDialogToSelectFiles() {
     const appPath = await appIpcClient.call('getAppPath')
     const result = await dialogIpcClient.showFilesSelectDialog({
-      title: '选择要转换的弹幕文件',
+      title: i18n.selectDanmakuFileToConvert,
       properties: ['openFile', 'multiSelections'],
       defaultPath: path.join(appPath, 'comments'),
-      filters: [{ name: 'niconico弹幕文件', extensions: ['xml'] }]
+      filters: [{ name: i18n.niconicoDanmakuFile, extensions: ['xml'] }]
     })
 
     if (result.canceled) { return }
     setFileList(result.filePaths)
   }
 
-  async function showDialogToSelectDirOfExportingAss() {
+  async function showDialogToSelectDirOfOutputAss() {
     const appPath = await appIpcClient.call('getAppPath')
     const result = await dialogIpcClient.showFilesSelectDialog({
-      title: '选择导出文件夹路径',
+      title: i18n.selectDirPathForOutput,
       properties: ['openDirectory'],
       defaultPath: path.join(appPath, 'ass'),
     })
@@ -77,12 +77,12 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
   }
 
   async function startConvert() {
-    if (fileList.length === 0) return notify.warning('弹幕文件列表不能为空')
+    if (fileList.length === 0) return notify.warning(i18n.hintForNoDanmakuFiles)
     const checkingResult = Danmaku2assWithFilters.checkIfConfigIsValid(config)
     if (checkingResult.valid) {
       setIsConverting(true)
-      notify.info('开始转换')
-      const convertNotify = createTextUpdatableNotify(`转换进度：0 / ${fileList.length}`, { variant: 'info', hideIconVariant: true })
+      notify.info(i18n.startToConvert)
+      const convertNotify = createTextUpdatableNotify(i18n.hintForConvertProgress(0, fileList.length), { variant: 'info', hideIconVariant: true })
       let succeedCount = 0
       let failedCount = 0
       let log = ''
@@ -96,18 +96,18 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
           log += e.toString() + '\n'
         }
 
-        convertNotify.updateText(`转换进度：${i + 1} / ${fileList.length}`)
+        convertNotify.updateText(i18n.hintForConvertProgress(i + 1, fileList.length))
       }
 
       setIsConverting(false)
       convertNotify.close()
-      notify.success(`转换完毕，成功${succeedCount}个，失败${failedCount}个！`)
+      notify.success(i18n.hintForConvertCompleted(succeedCount, failedCount))
 
       if (failedCount !== 0) {
         const appPath = await appIpcClient.call('getAppPath')
         const logFilePath = path.join(appPath, 'output.log')
         await fsPromise.writeFile(logFilePath, log, 'utf8')
-        notify.error(`失败的相关日志已保存至根目录的output.log中`)
+        notify.error(i18n.hintForSavePathOfLogOfFailedConvert)
       }
     } else {
       if (checkingResult.reason === 'hasEmptyItemInAssGeneration') notify.warning('')
@@ -119,7 +119,7 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
   const showingFilesText = (() => {
     if (fileList.length === 0) return ''
     if (fileList.length === 1) return fileList[0]
-    return fileList[0] + '等x个文件'
+    return fileList[0] + ' ' + i18n.andSomeOtherFiles(fileList.length - 1)
   })()
 
   const buttonRippleClasses: Parameters<typeof Button>[0]['TouchRippleProps'] = {
@@ -134,52 +134,52 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
       maxWidth={false}
       onClose={() => setIsOpen(false)}
     >
-      <DialogTitle>弹幕转换</DialogTitle>
-      <DialogContent style={{ minWidth: 800 }}>
+      <DialogTitle>{i18n.danmakuConvert}</DialogTitle>
+      <DialogContent style={{ minWidth: 800 }} className={classes.textFieldsNotBreakLine}>
         <TextField fullWidth
           style={{ marginTop: -10 }}
-          label="弹幕文件路径"
+          label={i18n.pathOfDanmakuFiles}
           value={showingFilesText}
           InputProps={{ readOnly: true }}
           InputLabelProps={{ shrink: true }}
-          placeholder="点击此处选择文件"
+          placeholder={i18n.clickHereToSelectFiles}
           onClick={showDialogToSelectFiles}
         />
         <TextField fullWidth
           style={{ marginTop: 10 }}
-          label="输出文件夹路径"
+          label={i18n.pathOfOutputDir}
           value={config.outputPath}
           InputProps={{ readOnly: true }}
           InputLabelProps={{ shrink: true }}
-          placeholder="点击此处选择文件夹"
-          onClick={showDialogToSelectDirOfExportingAss}
+          placeholder={i18n.clickHereToSelectDir}
+          onClick={showDialogToSelectDirOfOutputAss}
         />
 
         <div className='flex-row' style={{ marginTop: 20 }}>
-          <div style={{ width: '10em' }}>字幕文件生成参数：</div>
-          <div className='flex'>
+          <div style={{ width: '9em' }}>{i18n.parameterForSubtitleFileGeneration}：</div>
+          <div className='flex' style={{ marginLeft: '1em' }}>
             <Grid container spacing={1}>
               <Grid item xs={2}>
                 <TextField
-                  value={config.screenWidth}
+                  value={config.videoWidth}
                   type="number"
-                  label="屏幕宽度"
-                  onChange={e => updateConfig('screenWidth', parseInt(e.target.value))}
+                  label={i18n.videoWidth}
+                  onChange={e => updateConfig('videoWidth', parseInt(e.target.value))}
                 />
               </Grid>
               <Grid item xs={2}>
                 <TextField
-                  value={config.screenHeight}
+                  value={config.videoHeight}
                   type="number"
-                  label="屏幕高度"
-                  onChange={e => updateConfig('screenHeight', parseInt(e.target.value))}
+                  label={i18n.videoHeight}
+                  onChange={e => updateConfig('videoHeight', parseInt(e.target.value))}
                 />
               </Grid>
               <Grid item xs={2}>
                 <TextField
                   value={config.danmakuFontSize}
                   type="number"
-                  label="字体大小"
+                  label={i18n.fontSize}
                   onChange={e => updateConfig('danmakuFontSize' ,parseInt(e.target.value))}
                 />
               </Grid>
@@ -187,7 +187,7 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
                 <TextField
                   value={config.danmakuOpacity}
                   type="number"
-                  label="不透明度"
+                  label={i18n.opacity}
                   onChange={e => updateConfig('danmakuOpacity', parseFloat(e.target.value))}
                 />
               </Grid>
@@ -195,7 +195,7 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
                 <TextField
                   value={config.scrollingDanmakuDuration}
                   type="number"
-                  label="滚动弹幕持续时间"
+                  label={i18n.durationOfScrollingDanmaku}
                   InputProps={{
                     endAdornment: <InputAdornment position="end">秒</InputAdornment>,
                   }}
@@ -206,7 +206,7 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
                 <TextField fullWidth
                   value={config.staticDanmakuDuration}
                   type="number"
-                  label="静止弹幕持续时间"
+                  label={i18n.durationOfStaticDanmaku}
                   InputProps={{
                     endAdornment: <InputAdornment position="end">秒</InputAdornment>,
                   }}
@@ -218,7 +218,7 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
               <Grid item xs={2}>
                 <TextField fullWidth
                   value={config.danmakuFont}
-                  label="弹幕字体"
+                  label={i18n.danmakuFont}
                   onChange={e => updateConfig('danmakuFont', e.target.value)}
                 />
               </Grid>
@@ -226,7 +226,7 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
                 <TextField fullWidth
                   value={config.protectHeight}
                   type="number"
-                  label="底部预留高度"
+                  label={i18n.protectHeightForFooter}
                   onChange={e => updateConfig('protectHeight', parseInt(e.target.value))}
                 />
               </Grid>
@@ -234,15 +234,15 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
           </div>
         </div>
         <div className='flex-row' style={{ marginTop: 20 }}>
-          <div style={{ width: '10em' }}>弹幕过滤参数：</div>
-          <div className='flex flex-column'>
+          <div style={{ width: '9em' }}>{i18n.parameterForDanmakuFilter}：</div>
+          <div className='flex flex-column' style={{ marginLeft: '1em' }}>
             <Grid container spacing={1}>
               <Grid item xs={2}>
                 <TextField
                   value={config.ngScore}
                   type="number"
                   label="NG Score"
-                  placeholder='为空或0时不过滤'
+                  placeholder={i18n.helpTextForNgScore}
                   InputLabelProps={{ shrink: true }}
                   onChange={e => updateConfig('ngScore', e.target.value)}
                 />
@@ -251,8 +251,8 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
                 <TextField fullWidth
                   value={config.blockedWords}
                   type="text"
-                  label="关键词过滤"
-                  placeholder='以半角逗号分隔'
+                  label={i18n.fliterByKeyWord}
+                  placeholder={i18n.splitByHelfComma}
                   InputLabelProps={{ shrink: true }}
                   onChange={e => updateConfig('blockedWords', e.target.value)}
                 />
@@ -263,8 +263,8 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
               style={{ marginTop: 10 }}
               value={config.filters}
               type="text"
-              label="正则表达式过滤"
-              placeholder='以换行分隔'
+              label={i18n.filterByRegex}
+              placeholder={i18n.splitByLineBreak}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -275,8 +275,8 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
       </DialogContent>
 
       <DialogActions>
-        <Button color="primary" TouchRippleProps={buttonRippleClasses} onClick={() => setIsOpen(false)}>{'关闭'}</Button>
-        <Button color="primary" disabled={isConverting} TouchRippleProps={buttonRippleClasses} onClick={() => startConvert()}>{isConverting ? '转换中...' : '转换'}</Button>
+        <Button color="primary" TouchRippleProps={buttonRippleClasses} onClick={() => setIsOpen(false)}>{i18n.close}</Button>
+        <Button color="primary" disabled={isConverting} TouchRippleProps={buttonRippleClasses} onClick={() => startConvert()}>{isConverting ? i18n.converting + '...' : i18n.convert}</Button>
       </DialogActions>
     </Dialog>
   )

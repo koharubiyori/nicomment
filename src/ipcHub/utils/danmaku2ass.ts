@@ -1,8 +1,8 @@
 import childProcess from 'child_process'
 
 export interface Danmaku2assOptions {
-  screenWidth: number
-  screenHeight: number
+  videoWidth: number
+  videoHeight: number
   outputPath: string
   danmakuFont: string
   danmakuFontSize: number
@@ -17,7 +17,7 @@ export default function danmaku2ass(inputPath: string, outputPath: string, optio
 
   const params = [
     '-o', safety(outputPath),
-    '-s', options.screenWidth + 'x' + options.screenHeight,
+    '-s', options.videoWidth + 'x' + options.videoHeight,
     '-fn', safety(options.danmakuFont),
     '-fs', options.danmakuFontSize,
     '-a', options.danmakuOpacity,

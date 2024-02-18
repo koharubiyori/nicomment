@@ -6,8 +6,8 @@ import { libsIpcClient } from '~/ipcHub/modules/libs'
 
 const temporaryDirName = '.filtered'
 const requiredAssGenerationItems: (keyof Danmaku2assConfig)[] = [
-  'screenWidth',
-  'screenHeight',
+  'videoWidth',
+  'videoHeight',
   'outputPath',
   'danmakuFont',
   'danmakuFontSize',

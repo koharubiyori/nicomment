@@ -1,4 +1,5 @@
 const zhLanguageMap = {
+  // 单词
   sequence: '排序',
   search: '搜素',
   download: '下载',
@@ -28,7 +29,10 @@ const zhLanguageMap = {
   completed: '完成',
   error: '错误',
   result: '结果',
+  convert: '转换',
+  converting: '转换中',
 
+  // 词组
   keywordSearch: '关键词搜索',
   locationOfSave: '保存位置',
   smOrSoCode: 'sm/so号',
@@ -47,7 +51,28 @@ const zhLanguageMap = {
   directConnect: '直连',
   multipleDownload: '批量下载',
   waitForDownload: '等待下载',
+  niconicoDanmakuFile: 'niconico弹幕文件',
+  startToConvert: '开始转换',
+  danmakuConvert: '弹幕转换',
+  pathOfDanmakuFiles: '弹幕文件路径',
+  pathOfOutputDir: '输出文件夹路径',
+  parameterForSubtitleFileGeneration: '字幕文件生成参数',
+  videoWidth: '视频宽度',
+  videoHeight: '视频高度',
+  fontSize: '字体大小',
+  opacity: '不透明度',
+  durationOfScrollingDanmaku: '滚动弹幕持续时间',
+  durationOfStaticDanmaku: '静止弹幕持续时间',
+  danmakuFont: '弹幕字体',
+  protectHeightForFooter: '底部预留高度',
+  parameterForDanmakuFilter: '弹幕过滤参数',
+  fliterByKeyWord: '关键词过滤',
+  splitByHelfComma: '以半角逗号分隔',
+  filterByRegex: '正则表达式过滤',
+  splitByLineBreak: '以换行分隔',
 
+
+  // 短句，一般只会用在一个地方，变量名不一定和内容一一对应
   selectLocationOfSave: '选择保存位置',
   emptyKeywordHintForSearch: '搜索关键词不能为空',
   emptyLoginInfoHint: '登录信息不能为空',
@@ -71,6 +96,16 @@ const zhLanguageMap = {
   proxyUrlHelpText: '开头不包含协议',
   proxyAuthHelpText: '若无需凭证请勿填写',
   retryFailedDownload: '重试失败的下载',
+  selectDanmakuFileToConvert: '选择要转换的弹幕文件',
+  selectDirPathForOutput: '选择导出文件夹路径',
+  hintForNoDanmakuFiles: '弹幕文件列表不能为空',
+  hintForConvertProgress: (current: number, total: number) => `转换进度：${current} / ${total}`,
+  hintForConvertCompleted: (succeed: number, failed: number) => `转换完毕，成功${succeed}个，失败${failed}个`,
+  hintForSavePathOfLogOfFailedConvert: '失败的相关日志已保存至根目录的output.log中',
+  andSomeOtherFiles: (count: number) => `等${count}个文件`,
+  clickHereToSelectFiles: '点击此处选择文件',
+  clickHereToSelectDir: '点击此处选择文件夹',
+  helpTextForNgScore: '为空或0时不过滤',
 
   sequenceTypes: {
     commentMost: '弹幕最多',
