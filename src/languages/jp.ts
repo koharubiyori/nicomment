@@ -50,7 +50,7 @@ const jpLanguageMap: LanguageMap = {
   proxySettings: 'プロキシ設定',
   directConnect: 'ダイレクト',
   multipleDownload: 'バッチダウンロード',
-  waitForDownload: 'ダウンロードを待ちます',
+  waitForDownload: 'ダウンロード待機中',
   niconicoDanmakuFile: 'niconicoコメントファイル',
   startToConvert: '変換を開始します',
   danmakuConvert: 'コメント変換',
