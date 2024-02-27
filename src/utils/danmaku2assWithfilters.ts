@@ -1,7 +1,7 @@
 import fsPromise from 'fs/promises'
 import path, { join } from 'path'
 import { Danmaku2assConfig } from "~/prefs/danmaku2assPrefs"
-import { isValidRegExp } from './util'
+import { isValidRegExp } from './utils'
 import { libsIpcClient } from '~/ipcHub/modules/libs'
 
 const temporaryDirName = '.filtered'

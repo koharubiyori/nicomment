@@ -4,20 +4,21 @@ import moment from 'moment'
 import React, { useEffect, useRef, useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { throttle } from 'throttle-debounce'
-import nicoApi from '~/api/nico'
+import nicoApi, { GetCommentsOptions } from '~/api/nico'
 import { ReactComponent as NoDataIcon } from '~/assets/icons/nodata.svg'
 import useStateWithRef from '~/hooks/useStateWithRef'
 import settingsPrefs from '~/prefs/settingsPrefs'
 import execDownloadDanmaku from '~/utils/business/downloadDanmaku'
 import { useI18n } from '~/utils/i18n'
 import { notify } from '~/utils/notify'
-import SidePanel, { DurationType, SearchFormValues, SequenceType, SettingsFormValues, ViewCountType } from './components/sidePanel'
+import SidePanel, { CommentsGettingOptions, DurationType, SearchFormValues, SequenceType, SettingsFormValues, ViewCountType } from './components/sidePanel'
 import VideoItem, { VideoItemAction } from './components/videoItem'
 import classes from './index.scss'
 import CloseIcon from '@material-ui/icons/Close';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import showDanmakuPreModal from '~/pages/danmakuPreModal'
 import MultipleSelectDialog, { MultipleSelectDialogRef } from './components/multipleDownloadDialog'
+import dayjs from 'dayjs'
 
 interface SearchConfig {
   search?: SearchFormValues
@@ -37,6 +38,7 @@ function HomePage() {
     search: undefined,
     settings: settingsPrefs
   })
+  const commentsGettingOptionsRef = useRef<CommentsGettingOptions>()
   const videoListElRef = useRef<HTMLDivElement>()
   const multipleDownloadDialogRef = useRef<MultipleSelectDialogRef>()
 
@@ -162,6 +164,16 @@ function HomePage() {
       })
   }
 
+  function createGetCommentOptions(): GetCommentsOptions {
+    let dateForGettingComments = commentsGettingOptionsRef.current?.date
+    if (dateForGettingComments && dateForGettingComments.isSame(dayjs(), 'day')) dateForGettingComments = null
+    const getCommentsOptions: GetCommentsOptions = {
+      ...(dateForGettingComments ? { when: Math.floor(dateForGettingComments!.toDate().getTime() / 1000) } : {})
+    }
+
+    return getCommentsOptions
+  }
+
   async function downloadDanmaku(id: string, title?: string) {
     if (!searchConfigRef.current.settings?.mail || !searchConfigRef.current.settings.password) {
       return notify(i18n.emptyLoginInfoHint)
@@ -173,12 +185,13 @@ function HomePage() {
         searchConfigRef.current.settings!.password
       )
 
-      const displayTitle = title?.replace(/^([\s\S]{15})[\s\S]+$/, '$1...') ?? id
-      notify(i18n.startHintOfDownloadComments + displayTitle, ['top', 'right'])
+      const titleToShow = title?.replace(/^([\s\S]{15})[\s\S]+$/, '$1...') ?? id
+      notify(i18n.startHintOfDownloadComments + titleToShow, ['top', 'right'])
 
       const result = await execDownloadDanmaku(id, {
         title,
-        savePath: searchConfigRef.current.settings!.pathOfSave
+        savePath: searchConfigRef.current.settings!.pathOfSave,
+        getCommentsOptions: createGetCommentOptions()
       })
 
       if (result.success) {
@@ -242,7 +255,8 @@ function HomePage() {
           thumbnail: foundVideoItem.thumbnailUrl
         }
       }),
-      pathOfSave: searchConfigRef.current.settings!.pathOfSave
+      pathOfSave: searchConfigRef.current.settings!.pathOfSave,
+      getCommentsOptions: createGetCommentOptions()
     })
   }
 
@@ -260,6 +274,7 @@ function HomePage() {
     <div className={clsx(classes.container, 'flex-row')}>
       <SidePanel
         onSearch={search}
+        onUpdateCommentGettingOptions={options => commentsGettingOptionsRef.current = options}
         onAccountInfoChange={() => loginFlagRef.current = false}
         onSettingsChange={settings => searchConfigRef.current.settings = settings}
         onCodeSearch={code => downloadDanmaku(code, code)}

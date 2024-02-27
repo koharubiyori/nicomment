@@ -4,20 +4,27 @@ import { useI18n } from '~/utils/i18n'
 import downloadDanmaku from '~/utils/business/downloadDanmaku'
 import classes from './index.scss'
 import CssVariablesOfTheme from '~/components/cssVariablesOfTheme'
+import { GetCommentsOptions } from '~/api/nico'
 
 export interface Props {
   getRef: MutableRefObject<any>
 }
 
+export interface ShowMultipleDownloadOptions {
+  videoList: VideoItem[]
+  pathOfSave: string
+  getCommentsOptions: GetCommentsOptions
+}
+
 export interface MultipleSelectDialogRef {
-  show(options: { videoList: VideoItem[], pathOfSave: string }): void
+  show(options: ShowMultipleDownloadOptions): void
 }
 
 function MultipleSelectDialog(props: PropsWithChildren<Props>) {
   const i18n = useI18n()
   const [isOpen, setIsOpen] = useState(false)
   const [videoList, setVideoList] = useState<VideoItemWithDownload[]>([])
-  const pathOfSaveRef = useRef('')
+  const configsRef = useRef<Omit<ShowMultipleDownloadOptions, 'videoList'>>(null as any)
   const abortFlag = useRef(false)
 
   const totalStatus = useMemo<DownloadStatus>(() => {
@@ -27,9 +34,9 @@ function MultipleSelectDialog(props: PropsWithChildren<Props>) {
   }, [videoList])
 
   if (props.getRef) props.getRef.current = {
-    show: ({ videoList, pathOfSave }) => {
+    show: ({ videoList, pathOfSave, getCommentsOptions }) => {
       setIsOpen(true)
-      pathOfSaveRef.current = pathOfSave
+      configsRef.current = { pathOfSave, getCommentsOptions }
       const formattedVideoList = videoList.map(item => ({ ...item, status: 'waiting' as DownloadStatus }))
       setVideoList(formattedVideoList)
       startDownload(formattedVideoList)
@@ -56,7 +63,8 @@ function MultipleSelectDialog(props: PropsWithChildren<Props>) {
 
       const result = await downloadDanmaku(item.id, {
         title: item.title,
-        savePath: pathOfSaveRef.current
+        savePath: configsRef.current!.pathOfSave,
+        getCommentsOptions: configsRef.current.getCommentsOptions
       })
 
       if (abortFlag.current) break
@@ -65,7 +73,7 @@ function MultipleSelectDialog(props: PropsWithChildren<Props>) {
         const targetVideo = prevVal.find(prevValItem => prevValItem.id === item.id)!
         targetVideo.status = result.success ? 'completed' : 'error'
         targetVideo.resultText = ({
-          done: () => i18n.successHintOfDownloadComments(result.videoInfo!.video.title, result.fileContent!.commentTotal),
+          done: () => i18n.successHintOfDownloadCommentsShort(result.fileContent!.commentTotal),
           saveFileFailed: () => i18n.failHintOfSaveComments,
           downloadFileFailed: () => i18n.failHintOfDownloadComments,
         }[result.type])()

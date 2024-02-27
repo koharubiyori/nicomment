@@ -71,6 +71,7 @@ const jpLanguageMap: LanguageMap = {
   filterByRegex: '正規表現で除外',
   splitByLineBreak: '改行で区切り',
   multipleSelect: '複数選択',
+  dateForGettingComments: 'コメントを取得する時点',
 
   selectLocationOfSave: '保存位置を選択してください',
   emptyKeywordHintForSearch: '検索キーワードは空欄できません',
@@ -80,7 +81,8 @@ const jpLanguageMap: LanguageMap = {
   loginSuccessHint: 'ログインしました',
   loginFailHint: 'ログインは失敗しました。ログイン設定とネット環境をチェックしてください',
   startHintOfDownloadComments: 'コメントダウンロード：',
-  successHintOfDownloadComments: (title: string, total: number) => `コメントを保存しました：${title}，実際に保存したのは${total}個でした`,
+  successHintOfDownloadComments: (title: string, total: number) => `コメントを保存しました：${title}。実際に保存したのは${total}個でした`,
+  successHintOfDownloadCommentsShort: (total: number) => `コメントを保存しました。実際に保存したのは${total}個でした`,
   failHintOfSaveComments: 'ファイルの作成が失败しました',
   failHintOfDownloadComments: 'コメントのダウンロードが失敗しました',
   basicDateFormatForMoment: 'YYYY年MM月DD日 HH:mm:ss',
@@ -92,7 +94,7 @@ const jpLanguageMap: LanguageMap = {
   hintForTimelineChartOfTimeModify: '注：操作しやすいように，上の図は相対的な比例で表示されています。',
   hintForDanmakuTimeModificationDeleted: 'タイミング調整を削除しました',
   hintForDanmakuTimeModificationMinimum: '調整した時間を1秒以下にすることができません',
-  proxyUrlHelpText: '最初にプロトコルを含まない',
+  proxyUrlHelpText: '冒頭にプロトコルを含まない',
   proxyAuthHelpText: '認証不要の場合は記入しないで',
   retryFailedDownload: '失敗したダウンロードをリトライします',
 

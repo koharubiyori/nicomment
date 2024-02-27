@@ -11,9 +11,17 @@ import classes from './index.scss'
 import { Visibility, VisibilityOff, Close } from '@material-ui/icons'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import cachePrefs from '~/prefs/cachePrefs'
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import DayJsUtils from '@date-io/dayjs'
+import zh from 'dayjs/locale/zh-cn'
+import ja from 'dayjs/locale/ja'
+import dayjs, { Dayjs } from 'dayjs'
+import useObjectState from '~/hooks/useObjectState'
+import InfoIcon from '@material-ui/icons/Info'
 
 export interface Props {
   onSearch(searchFormValues: SearchFormValues): void
+  onUpdateCommentGettingOptions(options: CommentsGettingOptions): void
   onAccountInfoChange(): void
   onSettingsChange(settingsFormValues: SettingsFormValues): void
   onCodeSearch(code: string): void
@@ -24,6 +32,10 @@ export interface SearchFormValues {
   sequence: SequenceType
   duration: DurationType
   viewCount: ViewCountType
+}
+
+export interface CommentsGettingOptions {
+  date: Dayjs | null
 }
 
 export type SettingsFormValues = typeof settingsPrefs
@@ -60,11 +72,14 @@ export type ViewCountType =
 
 function SidePanel(props: Props) {
   const i18n = useI18n()
-  const [searchForm, setSearchForm] = useState<SearchFormValues>({
+  const [searchForm, setSearchFormItem] = useObjectState<SearchFormValues>({   // 只在搜索时传给回调函数
     keyword: '',
     sequence: 'commentMost',
     duration: 'none',
-    viewCount: 'none'
+    viewCount: 'none',
+  })
+  const [commentsGettingOptions, setCommentsGettingOptions] = useObjectState<CommentsGettingOptions>({        // 只要更新就触发回调
+    date: dayjs()
   })
   const [smOrSoCode, setSmOrSoCode] = useState('')
   const [settingsForm, setSettingsForm] = useState(() => ({ ...settingsPrefs }))
@@ -90,9 +105,9 @@ function SidePanel(props: Props) {
     cachePrefs.searchHistory = searchHistory
   }, [searchHistory])
 
-  function setSearchFormItem<T extends keyof typeof searchForm>(itemName: T, value: (typeof searchForm)[T]) {
-    setSearchForm(prevVal => ({ ...prevVal, [itemName]: value }))
-  }
+  useEffect(() => {
+    props.onUpdateCommentGettingOptions(commentsGettingOptions)
+  }, [commentsGettingOptions])
 
   function setSettingsFormItem<T extends keyof typeof settingsForm>(itemName: T, value: (typeof settingsForm)[T]) {
     setSettingsForm(prevVal => ({ ...prevVal, [itemName]: value }))
@@ -163,6 +178,7 @@ function SidePanel(props: Props) {
   const proxyTypeList = Object.entries(proxyTypeMap)
 
   const isUsingProxy = settingsForm.proxy.type !== 'direct'
+  const usingLocale = { zh, jp: ja }[settingsForm.language]
 
   return (
     <div className={clsx(classes.sideMenuContainer, 'flex-column')}>
@@ -229,6 +245,21 @@ function SidePanel(props: Props) {
               <MenuItem value={value} key={value}>{label}</MenuItem>
             )}
           </Select>
+        </FormControl>
+      </Box>
+      <Box>
+        <FormControl fullWidth>
+          <InputLabel shrink>{i18n.dateForGettingComments}</InputLabel>
+          <MuiPickersUtilsProvider locale={usingLocale} utils={DayJsUtils}>
+            <DatePicker disableToolbar disableFuture
+              variant="inline"
+              format="YYYY / MM / DD"
+              margin="normal"
+              value={commentsGettingOptions.date}
+              InputProps={{ readOnly: true }}
+              onChange={value => setCommentsGettingOptions('date', value)}
+            />
+          </MuiPickersUtilsProvider>
         </FormControl>
       </Box>
       <Box>
