@@ -4,7 +4,8 @@ import PlainPrefs from "./utils/plainPrefs"
 export interface Danmaku2assConfig extends Danmaku2assOptions {
   ngScore: string
   blockedWords: string
-  filters: string
+  filters: string,
+  autoConvert: boolean,
 }
 
 export const defaultDanmaku2assConfig: Danmaku2assConfig = {
@@ -20,7 +21,9 @@ export const defaultDanmaku2assConfig: Danmaku2assConfig = {
 
   ngScore: '',
   blockedWords: '',
-  filters: ''
+  filters: '',
+
+  autoConvert: false,
 }
 
 const _danmaku2assPrefs = new PlainPrefs('danmaku2assPrefs', defaultDanmaku2assConfig)

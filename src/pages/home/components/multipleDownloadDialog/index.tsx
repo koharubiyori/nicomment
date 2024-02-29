@@ -1,10 +1,11 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
 import React, { MutableRefObject, PropsWithChildren, useMemo, useRef, useState } from 'react'
 import { useI18n } from '~/utils/i18n'
-import downloadDanmaku from '~/utils/business/downloadDanmaku'
+import downloadDanmaku, { ResultOfDownloadDanmaku } from '~/utils/business/downloadDanmaku'
 import classes from './index.scss'
 import CssVariablesOfTheme from '~/components/cssVariablesOfTheme'
 import { GetCommentsOptions } from '~/api/nico'
+import { showDanmaku2assModal } from '~/pages/danmaku2assModal'
 
 export interface Props {
   getRef: MutableRefObject<any>
@@ -72,6 +73,7 @@ function MultipleSelectDialog(props: PropsWithChildren<Props>) {
       setVideoList(prevVal => {
         const targetVideo = prevVal.find(prevValItem => prevValItem.id === item.id)!
         targetVideo.status = result.success ? 'completed' : 'error'
+        targetVideo.result = result
         targetVideo.resultText = ({
           done: () => i18n.successHintOfDownloadCommentsShort(result.fileContent!.commentTotal),
           saveFileFailed: () => i18n.failHintOfSaveComments,
@@ -81,6 +83,15 @@ function MultipleSelectDialog(props: PropsWithChildren<Props>) {
         return prevVal.concat([])
       })
     }
+  }
+
+  function toConvertDownloadedComments() {
+    const downloadedItemPaths = videoList
+      .filter(item => item.status === 'completed')
+      .map(item => item.result!.filePath!)
+
+    showDanmaku2assModal(downloadedItemPaths)
+    setIsOpen(false)
   }
 
   function retryFailedDownloads() {
@@ -109,39 +120,50 @@ function MultipleSelectDialog(props: PropsWithChildren<Props>) {
       <CssVariablesOfTheme>
         <DialogTitle>{i18n.multipleDownload}</DialogTitle>
         <DialogContent>
-        <TableContainer variant="outlined" component={Paper} style={{ maxHeight: 387 }}>
-          <Table stickyHeader className={classes.table} size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">{i18n.thumbnail}</TableCell>
-                <TableCell align="center">{i18n.title}</TableCell>
-                <TableCell align="center">{i18n.status}</TableCell>
-                <TableCell align="center">{i18n.result}</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {videoList.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell align="center">
-                    <img
-                      width={130}
-                      height={100}
-                      src={item.thumbnail}
-                    />
-                  </TableCell>
-                  <TableCell align="center" style={{ width: '20em' }}>{item.title}</TableCell>
-                  <TableCell align="center" style={{ width: '7em' }} className={classes.statusText} data-status={item.status}>{statusMapToText(item.status)}</TableCell>
-                  <TableCell align="center" style={{ width: '20em' }}>{item.resultText ?? ''}</TableCell>
+          <TableContainer variant="outlined" component={Paper} style={{ maxHeight: 387, width: 'auto' }}>
+            <Table stickyHeader className={classes.table} size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">{i18n.thumbnail}</TableCell>
+                  <TableCell align="center">{i18n.title}</TableCell>
+                  <TableCell align="center">{i18n.status}</TableCell>
+                  <TableCell align="center">{i18n.result}</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {videoList.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell align="center">
+                      <img
+                        width={130}
+                        height={100}
+                        src={item.thumbnail}
+                      />
+                    </TableCell>
+                    <TableCell align="center" style={{ width: '20em' }}>{item.title}</TableCell>
+                    <TableCell align="center" style={{ width: '7em' }} className={classes.statusText} data-status={item.status}>{statusMapToText(item.status)}</TableCell>
+                    <TableCell align="center" style={{ width: '20em' }}>{item.resultText ?? ''}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </DialogContent>
 
         <DialogActions>
-          <Button color="primary" variant="text" disabled={totalStatus !== 'error'} onClick={retryFailedDownloads}>{i18n.retryFailedDownload}</Button>
-          <Button color="primary" onClick={closeAndAbortDownload}>{i18n.close}</Button>
+          <div className="flex-row flex-between">
+            <div style={{ marginLeft: 15 }}>
+              <Button
+                color="primary"
+                disabled={videoList.some(item => ['downloading', 'waiting'].includes(item.status))}
+                onClick={toConvertDownloadedComments}
+              >{i18n.convertDownloadedComments}</Button>
+            </div>
+            <div className="flex-row-inline flex-cross-center">
+              <Button color="primary" variant="text" disabled={totalStatus !== 'error'} onClick={retryFailedDownloads}>{i18n.retryFailedDownload}</Button>
+              <Button color="primary" onClick={closeAndAbortDownload}>{i18n.close}</Button>
+            </div>
+          </div>
         </DialogActions>
       </CssVariablesOfTheme>
     </Dialog>
@@ -158,6 +180,7 @@ export interface VideoItem {
 
 interface VideoItemWithDownload extends VideoItem {
   status: DownloadStatus,
+  result?: ResultOfDownloadDanmaku
   resultText?: string
 }
 

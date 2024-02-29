@@ -75,7 +75,7 @@ export function createTextUpdatableNotify(message: ReactNode, options?: OptionsO
   const textRef = React.createRef<HTMLSpanElement>()
   const key = enqueueSnackbar(<span ref={textRef}>{message}</span>, { ...options, persist: true })
   return {
-    updateText: (content: string) => textRef.current!.textContent = content,
-    close: () => closeSnackbar(key)
+    updateText: (content: string) => { if (textRef.current) textRef.current.textContent = content },
+    close: () => { closeSnackbar(key); textRef.current?.remove() }
   }
 }

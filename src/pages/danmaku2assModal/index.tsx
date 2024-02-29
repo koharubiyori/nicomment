@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, InputAdornment, TextField } from '@material-ui/core'
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, Grid, InputAdornment, TextField } from '@material-ui/core'
 import React, { PropsWithChildren, useEffect, useState } from 'react'
 import { globalRootParent } from '~/utils/rootParent'
 import { useI18n } from '~/utils/i18n'
@@ -10,12 +10,13 @@ import classes from './index.scss'
 import { notify, createTextUpdatableNotify } from '~/utils/notify'
 import Danmaku2assWithFilters from '~/utils/danmaku2assWithfilters'
 import fsPromise from 'fs/promises'
+import { writeInLogs } from '~/utils/utils'
 
 export interface Props {
 
 }
 
-export let showDanmaku2assModal: () => void = null as any
+export let showDanmaku2assModal: (files: string[]) => void = null as any
 
 function Danmaku2assModal(props: PropsWithChildren<Props>) {
   const i18n = useI18n()
@@ -35,8 +36,9 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
     ]
   })()
 
-  showDanmaku2assModal = () => {
+  showDanmaku2assModal = (files = []) => {
     setIsOpen(true)
+    setFileList(files)
   }
 
   useEffect(() => {
@@ -46,10 +48,6 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
         updateConfig('outputPath', path.join(appPath, 'ass'))
       })
   }, [])
-
-  useEffect(() => {
-    if (isOpen) setFileList([])
-  }, [isOpen])
 
   async function showDialogToSelectFiles() {
     const appPath = await appIpcClient.call('getAppPath')
@@ -106,14 +104,12 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
       })
 
       if (failedCount !== 0) {
-        const appPath = await appIpcClient.call('getAppPath')
-        const logFilePath = path.join(appPath, 'output.log')
-        await fsPromise.writeFile(logFilePath, log, 'utf8')
+        await writeInLogs('last failed batch convert', log)
         notify.error(i18n.hintForSavePathOfLogOfFailedConvert, { autoHideDuration: 5000 })
       }
     } else {
-      if (checkingResult.reason === 'hasEmptyItemInAssGeneration') notify.warning('')
-      if (checkingResult.reason === 'invalidRegExp') notify.warning('')
+      if (checkingResult.reason === 'hasEmptyItemInAssGeneration') notify.warning(i18n.hintForEmptyItemInAssGeneration)
+      if (checkingResult.reason === 'invalidRegExp') notify.warning(i18n.hintForInvalidRegex(checkingResult.index, checkingResult.pattern))
       return
     }
   }
@@ -182,7 +178,7 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
                   value={config.danmakuFontSize}
                   type="number"
                   label={i18n.fontSize}
-                  onChange={e => updateConfig('danmakuFontSize' ,parseInt(e.target.value))}
+                  onChange={e => updateConfig('danmakuFontSize', parseInt(e.target.value))}
                 />
               </Grid>
               <Grid item xs={2}>
@@ -277,8 +273,23 @@ function Danmaku2assModal(props: PropsWithChildren<Props>) {
       </DialogContent>
 
       <DialogActions>
-        <Button color="primary" TouchRippleProps={buttonRippleClasses} onClick={() => setIsOpen(false)}>{i18n.close}</Button>
-        <Button color="primary" disabled={isConverting} TouchRippleProps={buttonRippleClasses} onClick={() => startConvert()}>{isConverting ? i18n.converting + '...' : i18n.convert}</Button>
+        <div className="flex-row flex-between">
+          <div style={{ marginLeft: 15 }}>
+            <FormControlLabel
+              control={<Checkbox
+                color="primary"
+                checked={config.autoConvert}
+                onChange={e => updateConfig('autoConvert', e.target.checked)}
+              />}
+              label={i18n.autoConvertAfterDownloadingCommentsByClick}
+            />
+          </div>
+
+          <div className="flex-row-inline flex-cross-center">
+            <Button color="primary" TouchRippleProps={buttonRippleClasses} onClick={() => setIsOpen(false)}>{i18n.close}</Button>
+            <Button color="primary" disabled={isConverting} TouchRippleProps={buttonRippleClasses} onClick={() => startConvert()}>{isConverting ? i18n.converting + '...' : i18n.convert}</Button>
+          </div>
+        </div>
       </DialogActions>
     </Dialog>
   )

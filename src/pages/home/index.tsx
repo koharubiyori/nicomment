@@ -19,6 +19,9 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import showDanmakuPreModal from '~/pages/danmakuPreModal'
 import MultipleSelectDialog, { MultipleSelectDialogRef } from './components/multipleDownloadDialog'
 import dayjs from 'dayjs'
+import danmaku2assPrefs from '~/prefs/danmaku2assPrefs'
+import Danmaku2assWithFilters from '~/utils/danmaku2assWithfilters'
+import { writeInLogs } from '~/utils/utils'
 
 interface SearchConfig {
   search?: SearchFormValues
@@ -195,7 +198,22 @@ function HomePage() {
       })
 
       if (result.success) {
-        notify.success(i18n.successHintOfDownloadComments(result.videoInfo!.video.title, result.fileContent!.commentTotal), ['top', 'right'])
+        if (danmaku2assPrefs.autoConvert) {
+          const checkingResult = Danmaku2assWithFilters.checkIfConfigIsValid(danmaku2assPrefs)
+          if (checkingResult.valid) {
+            try {
+              Danmaku2assWithFilters.convert(result.filePath!, danmaku2assPrefs.outputPath, { ...danmaku2assPrefs, isOutputPathOnlyDir: true })
+              notify.success(i18n.hintForSucceededDownloadAndConvert(result.videoInfo!.video.title, result.fileContent!.commentTotal), ['top', 'right'])
+            } catch(e: any) {
+              writeInLogs(result.videoInfo!.video.title, e.toString())
+              notify.warning(i18n.hintForFailedConvertWithSucceededDownload(result.videoInfo!.video.title, result.fileContent!.commentTotal))
+            }
+          } else {
+            notify.error(i18n.hintForInvalidConfigForCommentsConvert)
+          }
+        } else {
+          notify.success(i18n.successHintOfDownloadComments(result.videoInfo!.video.title, result.fileContent!.commentTotal), ['top', 'right'])
+        }
       } else if (result.type === 'downloadFileFailed') {
         notify.error(i18n.failHintOfDownloadComments, ['top', 'right'])
       } else if (result.type === 'saveFileFailed') {

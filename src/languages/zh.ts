@@ -72,6 +72,8 @@ const zhLanguageMap = {
   splitByLineBreak: '以换行分隔',
   multipleSelect: '多选',
   dateForGettingComments: '弹幕获取时间点',
+  autoConvertAfterDownloadingCommentsByClick: '单击弹幕下载后自动转换',
+  convertDownloadedComments: '转换已下载的弹幕',
 
   // 短句，一般只会用在一个地方，变量名不一定和内容一一对应
   selectLocationOfSave: '选择保存位置',
@@ -82,8 +84,8 @@ const zhLanguageMap = {
   loginSuccessHint: '登录成功',
   loginFailHint: '登录失败，请核对登录信息并确认网络环境',
   startHintOfDownloadComments: '开始下载弹幕：',
-  successHintOfDownloadComments: (title: string, total: number) => `弹幕保存成功：${title}，实际保存${total}条`,
-  successHintOfDownloadCommentsShort: (total: number) => `弹幕保存成功，实际保存${total}条`,
+  successHintOfDownloadComments: (title: string, total: number) => `弹幕保存完毕：${title}，实际保存${total}条`,
+  successHintOfDownloadCommentsShort: (total: number) => `弹幕保存完毕，实际保存${total}条`,
   failHintOfSaveComments: '文件创建失败',
   failHintOfDownloadComments: '弹幕下载失败',
   basicDateFormatForMoment: 'YYYY年MM月DD日 HH:mm:ss',
@@ -103,12 +105,17 @@ const zhLanguageMap = {
   hintForNoDanmakuFiles: '弹幕文件列表不能为空',
   hintForConvertProgress: (current: number, total: number) => `转换进度：${current} / ${total}`,
   hintForConvertCompleted: (succeed: number, failed: number) => `转换完毕，成功${succeed}个，失败${failed}个`,
-  hintForSavePathOfLogOfFailedConvert: '失败的相关日志已保存至根目录的output.log中',
+  hintForSavePathOfLogOfFailedConvert: '失败的相关日志已保存至logs文件夹',
   andSomeOtherFiles: (count: number) => `等${count}个文件`,
   clickHereToSelectFiles: '点击此处选择文件',
   clickHereToSelectDir: '点击此处选择文件夹',
   helpTextForNgScore: '为空或0时不过滤',
   helpTextForMultipleSelect: 'Ctrl + 左键单击',
+  hintForEmptyItemInAssGeneration: '字幕文件生成参数中不能包含空项',
+  hintForInvalidRegex: (index: number, regex: string) => `'第${index + 1}行存在无效的正则表达式：${regex}'`,
+  hintForInvalidConfigForCommentsConvert: '因无效的弹幕转换配置，弹幕文件未能转换',
+  hintForSucceededDownloadAndConvert: (title: string, total: number) => `弹幕保存并转换完毕：${title}，实际保存${total}条`,
+  hintForFailedConvertWithSucceededDownload: (title: string, total: number) => `弹幕已保存但转换失败：${title}，实际保存${total}条，相关错误日志已记录到logs文件夹`,
 
   sequenceTypes: {
     commentMost: '弹幕最多',

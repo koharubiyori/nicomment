@@ -16,6 +16,7 @@ export interface ResultOfDownloadDanmaku {
   type: 'done' | 'saveFileFailed' | 'downloadFileFailed'
   videoInfo?: Record<string, any>
   fileContent?: ReturnType<typeof nicoCommentResponseToXml>
+  filePath?: string
   error?: any
 }
 
@@ -36,7 +37,7 @@ export default async function downloadDanmaku(id: string, options: DownloadDanma
 
     try {
       await new Promise<void>((resolve, reject) => fs.writeFile(filePath, fileContent.xml, (e) => e ? reject(e) : resolve()))
-      return { success: true, type: 'done', videoInfo, fileContent }
+      return { success: true, type: 'done', videoInfo, fileContent, filePath }
     } catch(e) {
       console.log(e)
       return {
