@@ -32,6 +32,5 @@ Nicommentは[ニコニコ動画](http://www.nicovideo.jp)のコメントをダ�
 
 ## TODO
 
-* 歴史コメントのダウンロード
 * 動画のダウンロード
 

@@ -27,5 +27,4 @@ Nicomment是一个用于下载N站弹幕的工具，使用Electron + MaterialUI 
 
 ## TODO
 
-* 历史弹幕下载
 * 视频下载
