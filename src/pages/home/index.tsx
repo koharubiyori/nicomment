@@ -249,10 +249,15 @@ function HomePage() {
     }
   }
 
-  function executeMultipleDownload() {
+  async function executeMultipleDownload() {
     if (!searchConfigRef.current.settings?.mail || !searchConfigRef.current.settings.password) {
       return notify(i18n.emptyLoginInfoHint)
     }
+
+    if (!loginFlagRef.current) await login(
+      searchConfigRef.current.settings!.mail,
+      searchConfigRef.current.settings!.password
+    )
 
     multipleDownloadDialogRef.current?.show({
       videoList: selectedVideoIds.map(id => {
