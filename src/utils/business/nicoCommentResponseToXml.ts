@@ -3,20 +3,19 @@ export interface Result {
   commentTotal: number
 }
 
-export interface NicoCommentResponseToXmlOptions {
-  excludeEasyComments?: boolean
+export interface NicoCommentsToXmlOptions {
   processDanmakuData?: (data: any) => any
 }
 
-export default function nicoCommentResponseToXml(response: any, options?: NicoCommentResponseToXmlOptions) {
-  let dataWillBeXml = response.data.threads
-    .reduce((result: any[], item: any) => options?.excludeEasyComments && item.fork === 'easy' ? result : result.concat(item.comments), [])
+export default function nicoCommentsToXml(comments: any, options?: NicoCommentsToXmlOptions) {
+  let dataToConvertToXml = comments
+    .reduce((result: any[], item: any) => result.concat(item.comments), [])
 
-  dataWillBeXml = (options?.processDanmakuData ?? ((data: any) => data))(dataWillBeXml)
+  dataToConvertToXml = (options?.processDanmakuData ?? ((data: any) => data))(dataToConvertToXml)
   const xmlDocument = new Document()
   const packetEl = xmlDocument.createElement('packet')
 
-  dataWillBeXml.forEach((item: any) => {
+  dataToConvertToXml.forEach((item: any) => {
     const chatEl = xmlDocument.createElement('chat')
     // 模仿niconico旧版api返回的xml格式
     const attributes = {
@@ -44,6 +43,6 @@ export default function nicoCommentResponseToXml(response: any, options?: NicoCo
 
   return {
     xml: '<?xml version="1.0" encoding="UTF-8"?>' + xmlDocumentBody,
-    commentTotal: dataWillBeXml.length
+    commentTotal: dataToConvertToXml.length
   }
 }

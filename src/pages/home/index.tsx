@@ -167,16 +167,6 @@ function HomePage() {
       })
   }
 
-  function createGetCommentOptions(): GetCommentsOptions {
-    let dateForGettingComments = commentsGettingOptionsRef.current?.date
-    if (dateForGettingComments && dateForGettingComments.isSame(dayjs(), 'day')) dateForGettingComments = null
-    const getCommentsOptions: GetCommentsOptions = {
-      ...(dateForGettingComments ? { when: Math.floor(dateForGettingComments!.toDate().getTime() / 1000) } : {})
-    }
-
-    return getCommentsOptions
-  }
-
   async function downloadDanmaku(id: string, title?: string) {
     if (!searchConfigRef.current.settings?.mail || !searchConfigRef.current.settings.password) {
       return notify(i18n.emptyLoginInfoHint)
@@ -194,7 +184,7 @@ function HomePage() {
       const result = await execDownloadDanmaku(id, {
         title,
         savePath: searchConfigRef.current.settings!.pathOfSave,
-        getCommentsOptions: createGetCommentOptions()
+        commentsGettingOptions: commentsGettingOptionsRef.current
       })
 
       if (result.success) {
@@ -274,7 +264,7 @@ function HomePage() {
         }
       }),
       pathOfSave: searchConfigRef.current.settings!.pathOfSave,
-      getCommentsOptions: createGetCommentOptions()
+      commentsGettingOptions: commentsGettingOptionsRef.current
     })
   }
 

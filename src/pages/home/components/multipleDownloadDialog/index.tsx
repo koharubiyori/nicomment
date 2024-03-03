@@ -1,11 +1,11 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
 import React, { MutableRefObject, PropsWithChildren, useMemo, useRef, useState } from 'react'
 import { useI18n } from '~/utils/i18n'
-import downloadDanmaku, { ResultOfDownloadDanmaku } from '~/utils/business/downloadDanmaku'
+import fetchDanmaku, { ResultOfFetchDanmaku } from '~/utils/business/downloadDanmaku'
 import classes from './index.scss'
 import CssVariablesOfTheme from '~/components/cssVariablesOfTheme'
-import { GetCommentsOptions } from '~/api/nico'
 import { showDanmaku2assModal } from '~/pages/danmaku2assModal'
+import { CommentsGettingOptions } from '../sidePanel'
 
 export interface Props {
   getRef: MutableRefObject<any>
@@ -14,7 +14,7 @@ export interface Props {
 export interface ShowMultipleDownloadOptions {
   videoList: VideoItem[]
   pathOfSave: string
-  getCommentsOptions: GetCommentsOptions
+  commentsGettingOptions?: CommentsGettingOptions
 }
 
 export interface MultipleSelectDialogRef {
@@ -35,9 +35,9 @@ function MultipleSelectDialog(props: PropsWithChildren<Props>) {
   }, [videoList])
 
   if (props.getRef) props.getRef.current = {
-    show: ({ videoList, pathOfSave, getCommentsOptions }) => {
+    show: ({ videoList, pathOfSave, commentsGettingOptions }) => {
       setIsOpen(true)
-      configsRef.current = { pathOfSave, getCommentsOptions }
+      configsRef.current = { pathOfSave, commentsGettingOptions }
       const formattedVideoList = videoList.map(item => ({ ...item, status: 'waiting' as DownloadStatus }))
       setVideoList(formattedVideoList)
       startDownload(formattedVideoList)
@@ -62,10 +62,10 @@ function MultipleSelectDialog(props: PropsWithChildren<Props>) {
         return prevVal.concat([])
       })
 
-      const result = await downloadDanmaku(item.id, {
+      const result = await fetchDanmaku(item.id, {
         title: item.title,
         savePath: configsRef.current!.pathOfSave,
-        getCommentsOptions: configsRef.current.getCommentsOptions
+        commentsGettingOptions: configsRef.current.commentsGettingOptions
       })
 
       if (abortFlag.current) break
@@ -76,6 +76,7 @@ function MultipleSelectDialog(props: PropsWithChildren<Props>) {
         targetVideo.result = result
         targetVideo.resultText = ({
           done: () => i18n.successHintOfDownloadCommentsShort(result.fileContent!.commentTotal),
+          incompleteSave: () => '',
           saveFileFailed: () => i18n.failHintOfSaveComments,
           downloadFileFailed: () => i18n.failHintOfDownloadComments,
         }[result.type])()
@@ -180,7 +181,7 @@ export interface VideoItem {
 
 interface VideoItemWithDownload extends VideoItem {
   status: DownloadStatus,
-  result?: ResultOfDownloadDanmaku
+  result?: ResultOfFetchDanmaku
   resultText?: string
 }
 

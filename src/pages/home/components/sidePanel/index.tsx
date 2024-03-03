@@ -35,7 +35,8 @@ export interface SearchFormValues {
 }
 
 export interface CommentsGettingOptions {
-  date: Dayjs | null
+  date?: Dayjs
+  expectingQuantity?: number
 }
 
 export type SettingsFormValues = typeof settingsPrefs
@@ -79,7 +80,8 @@ function SidePanel(props: Props) {
     viewCount: 'none',
   })
   const [commentsGettingOptions, setCommentsGettingOptions] = useObjectState<CommentsGettingOptions>({        // 只要更新就触发回调
-    date: dayjs()
+    date: dayjs(),
+    expectingQuantity: undefined
   })
   const [smOrSoCode, setSmOrSoCode] = useState('')
   const [settingsForm, setSettingsForm] = useState(() => ({ ...settingsPrefs }))
@@ -248,21 +250,6 @@ function SidePanel(props: Props) {
         </FormControl>
       </Box>
       <Box>
-        <FormControl fullWidth>
-          <InputLabel shrink>{i18n.dateForGettingComments}</InputLabel>
-          <MuiPickersUtilsProvider locale={usingLocale} utils={DayJsUtils}>
-            <DatePicker disableToolbar disableFuture
-              variant="inline"
-              format="YYYY / MM / DD"
-              margin="normal"
-              value={commentsGettingOptions.date}
-              InputProps={{ readOnly: true }}
-              onChange={value => setCommentsGettingOptions('date', value)}
-            />
-          </MuiPickersUtilsProvider>
-        </FormControl>
-      </Box>
-      <Box>
         <Button fullWidth
           variant="contained"
           color="primary"
@@ -284,6 +271,33 @@ function SidePanel(props: Props) {
           style={{ height: 33, marginLeft: 10 }}
           onClick={codeSearch}
         >{i18n.download}</Button>
+      </Box>
+
+      <Typography variant="subtitle1" style={{ marginTop: 20, marginBottom: 10 }}>{i18n.settingsForDanmakuGetting}</Typography>
+      <Box>
+        <FormControl fullWidth>
+          <InputLabel shrink>{i18n.dateForGettingComments}</InputLabel>
+          <MuiPickersUtilsProvider locale={usingLocale} utils={DayJsUtils}>
+            <DatePicker disableToolbar disableFuture
+              variant="inline"
+              format="YYYY / MM / DD"
+              margin="normal"
+              value={commentsGettingOptions.date}
+              InputProps={{ readOnly: true }}
+              onChange={value => setCommentsGettingOptions('date', value!)}
+            />
+          </MuiPickersUtilsProvider>
+        </FormControl>
+      </Box>
+      <Box>
+        <FormControl fullWidth>
+          <TextField
+            value={commentsGettingOptions.expectingQuantity}
+            label={i18n.expectingQuantity}
+            type="number"
+            onChange={e => setCommentsGettingOptions('expectingQuantity', parseInt(e.target.value!))}
+          />
+        </FormControl>
       </Box>
 
       <Typography variant="subtitle1" style={{ marginTop: 20, marginBottom: 10 }}>{i18n.settings}</Typography>

@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core'
 import React, { useEffect, useRef, useState } from 'react'
-import downloadDanmaku from '~/utils/business/downloadDanmaku'
+import fetchDanmaku from '~/utils/business/downloadDanmaku'
 import { globalI18n, useI18n } from '~/utils/i18n'
 import { notify } from '~/utils/notify'
 import { globalRootParent } from '~/utils/rootParent'
@@ -54,7 +54,7 @@ function DanmakuPreModal() {
   }
 
   async function download() {
-    const result = await downloadDanmaku(danmakuData!.contentId, {
+    const result = await fetchDanmaku(danmakuData!.contentId, {
       title: danmakuData!.title,
       savePath: optionsRef.current.savePath,
       toXmlOptions: {

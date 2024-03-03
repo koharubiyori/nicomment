@@ -74,6 +74,8 @@ const jpLanguageMap: LanguageMap = {
   dateForGettingComments: 'コメントを取得する時点',
   autoConvertAfterDownloadingCommentsByClick: 'クリックでのコメントダウンロード後に自動変換',
   convertDownloadedComments: 'ダウンロード済みのコメントを変換',
+  settingsForDanmakuGetting: 'コメント取得設定',
+  expectingQuantity: '見込み数量',
 
   selectLocationOfSave: '保存先を選択してください',
   emptyKeywordHintForSearch: '検索キーワードは空欄できません',
@@ -85,6 +87,7 @@ const jpLanguageMap: LanguageMap = {
   startHintOfDownloadComments: 'コメントダウンロード：',
   successHintOfDownloadComments: (title: string, total: number) => `コメントを保存しました：${title}。実際で保存したのは${total}個でした`,
   successHintOfDownloadCommentsShort: (total: number) => `コメントを保存しました。実際で保存したのは${total}個でした`,
+  hintForImcompleteDownload: (total: number) => `ダウンロードが失敗によって停止し、${total}個のコメントを保存しました`,
   failHintOfSaveComments: 'ファイルの作成が失败しました',
   failHintOfDownloadComments: 'コメントのダウンロードが失敗しました',
   basicDateFormatForMoment: 'YYYY年MM月DD日 HH:mm:ss',

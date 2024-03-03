@@ -74,6 +74,8 @@ const zhLanguageMap = {
   dateForGettingComments: '弹幕获取时间点',
   autoConvertAfterDownloadingCommentsByClick: '单击弹幕下载后自动转换',
   convertDownloadedComments: '转换已下载的弹幕',
+  settingsForDanmakuGetting: '弹幕获取设置',
+  expectingQuantity: '期待获取量',
 
   // 短句，一般只会用在一个地方，变量名不一定和内容一一对应
   selectLocationOfSave: '选择保存位置',
@@ -86,6 +88,7 @@ const zhLanguageMap = {
   startHintOfDownloadComments: '开始下载弹幕：',
   successHintOfDownloadComments: (title: string, total: number) => `弹幕保存完毕：${title}，实际保存${total}条`,
   successHintOfDownloadCommentsShort: (total: number) => `弹幕保存完毕，实际保存${total}条`,
+  hintForImcompleteDownload: (total: number) => `下载因失败而中断，${total}条弹幕已保存`,
   failHintOfSaveComments: '文件创建失败',
   failHintOfDownloadComments: '弹幕下载失败',
   basicDateFormatForMoment: 'YYYY年MM月DD日 HH:mm:ss',

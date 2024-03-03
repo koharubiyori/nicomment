@@ -9,7 +9,6 @@ import path from 'path'
 import classes from './index.scss'
 import { notify, createTextUpdatableNotify } from '~/utils/notify'
 import Danmaku2assWithFilters from '~/utils/danmaku2assWithfilters'
-import fsPromise from 'fs/promises'
 import { writeInLogs } from '~/utils/utils'
 
 export interface Props {
