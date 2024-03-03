@@ -76,7 +76,7 @@ function MultipleSelectDialog(props: PropsWithChildren<Props>) {
         targetVideo.result = result
         targetVideo.resultText = ({
           done: () => i18n.successHintOfDownloadCommentsShort(result.fileContent!.commentTotal),
-          incompleteSave: () => '',
+          incompleteSave: () => i18n.hintForImcompleteDownload(result.fileContent!.commentTotal),
           saveFileFailed: () => i18n.failHintOfSaveComments,
           downloadFileFailed: () => i18n.failHintOfDownloadComments,
         }[result.type])()
