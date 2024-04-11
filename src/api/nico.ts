@@ -37,7 +37,7 @@ const nicoApi = {
   },
 
   search(options: NicoSearchOptions) {
-    return nicoRequest.get('https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search', {
+    return nicoRequest.get('https://snapshot.search.nicovideo.jp/api/v2/snapshot/video/contents/search', {
       searchParams: {
         ...options,
         _context: 'apiguide'
