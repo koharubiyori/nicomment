@@ -92,10 +92,9 @@ function SidePanel(props: Props) {
 
   useEffect(() => {
     if (settingsForm.pathOfSave) { return }
-    appIpcClient.call('getAppPath')
-      .then((appPath: string) => {
-        const pathOfSave = path.join(appPath, 'comments')
-        setSettingsFormItem('pathOfSave', pathOfSave)
+    appIpcClient.call('getPath', 'desktop')
+      .then((desktopPath: string) => {
+        setSettingsFormItem('pathOfSave', desktopPath)
       })
   }, [])
 

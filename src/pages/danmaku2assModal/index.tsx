@@ -15,7 +15,7 @@ export interface Props {
 
 }
 
-export let showDanmaku2assModal: (files: string[]) => void = null as any
+export let showDanmaku2assModal: (files?: string[]) => void = null as any
 
 function Danmaku2assModal(props: PropsWithChildren<Props>) {
   const i18n = useI18n()
