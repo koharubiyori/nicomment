@@ -1,4 +1,4 @@
-import zh, { LanguageMap } from './zh'
+import { LanguageMap } from './zh'
 
 const jpLanguageMap: LanguageMap = {
   sequence: '順序',
@@ -96,7 +96,7 @@ const jpLanguageMap: LanguageMap = {
   noRecordOfSearchHistory: '検索履歴がありません',
   insertZeroSecondHint: '0秒を挿入することができません',
   timeRangeConflictHint: '追加する時間帯と追加済みの時間帯が重なっています',
-  hintForTimelineChartOfTimeModify: '注：操作しやすいように，上の図が相対的な比例で表示されています。',
+  hintForTimelineChartOfTimeModify: '注：操作しやすいように、上の図が相対的な比例で表示されています。',
   hintForDanmakuTimeModificationDeleted: 'タイミング調整を削除しました',
   hintForDanmakuTimeModificationMinimum: '調整した時間を1秒以下にすることができません',
   proxyUrlHelpText: '冒頭にプロトコルが付きません',
@@ -107,7 +107,7 @@ const jpLanguageMap: LanguageMap = {
   selectDirPathForOutput: 'アウトプットフォルダ位置を選択します',
   hintForNoDanmakuFiles: 'コメントファイルをまだ選択していません',
   hintForConvertProgress: (current: number, total: number) => `変換進捗：${current} / ${total}`,
-  hintForConvertCompleted: (succeed: number, failed: number) => `変換完了しました。成功は${succeed}個，失败は${failed}個でした`,
+  hintForConvertCompleted: (succeed: number, failed: number) => `変換完了しました。成功は${succeed}個、失败は${failed}個でした`,
   hintForSavePathOfLogOfFailedConvert: '失敗に関するログがlogsフォルダに保存されました',
   andSomeOtherFiles: (count: number) => `などのファイル${count}個`,
   clickHereToSelectFiles: 'クリックしてファイルを選択',
@@ -117,8 +117,8 @@ const jpLanguageMap: LanguageMap = {
   hintForEmptyItemInAssGeneration: '字幕ファイル生成のパラメータが空欄できません',
   hintForInvalidRegex: (index: number, regex: string) => `${index + 1}行目に無効な正規表現が存在しています：${regex}'`,
   hintForInvalidConfigForCommentsConvert: '無効なコメント変換設定により変換できませんでした',
-  hintForSucceededDownloadAndConvert: (title: string, total: number) => `コメントを保存して変換しました：${title}，実際に保存されたのは${total}個でした`,
-  hintForFailedConvertWithSucceededDownload: (title: string, total: number) => `コメントの保存は成功で変換は失敗しました：${title}，実際に保存されたのは${total}個でした，失敗に関するログはlogsフォルダに保存されました`,
+  hintForSucceededDownloadAndConvert: (title: string, total: number) => `コメントを保存して変換しました：${title}、実際に保存されたのは${total}個でした`,
+  hintForFailedConvertWithSucceededDownload: (title: string, total: number) => `コメントの保存は成功で変換は失敗しました：${title}、実際に保存されたのは${total}個でした、失敗に関するログはlogsフォルダに保存されました`,
 
   sequenceTypes: {
     commentMost: 'コメントが多い',
