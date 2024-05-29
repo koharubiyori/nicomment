@@ -112,7 +112,7 @@ const jpLanguageMap: LanguageMap = {
   andSomeOtherFiles: (count: number) => `などのファイル${count}個`,
   clickHereToSelectFiles: 'クリックしてファイルを選択',
   clickHereToSelectDir: 'クリックしてフォルダを選択',
-  helpTextForNgScore: '空欄また0の時は除外しません',
+  helpTextForNgScore: '空欄や0だと無効',
   helpTextForMultipleSelect: 'Ctrl + 左クリック',
   hintForEmptyItemInAssGeneration: '字幕ファイル生成のパラメータが空欄できません',
   hintForInvalidRegex: (index: number, regex: string) => `${index + 1}行目に無効な正規表現が存在しています：${regex}'`,
